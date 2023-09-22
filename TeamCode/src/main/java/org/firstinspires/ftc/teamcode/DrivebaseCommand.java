@@ -13,8 +13,8 @@ public class DrivebaseCommand extends CommandBase {
 
     private DoubleSupplier leftY, leftX, rightX;
 
-    public DrivebaseCommand(HardwareMap hMap, Telemetry tele, DoubleSupplier leftY, DoubleSupplier leftX, DoubleSupplier rightX) {
-        drivebaseSubsystem = new DrivebaseSubsystem(hMap, tele);
+    public DrivebaseCommand(DrivebaseSubsystem drivebaseSubsystem, DoubleSupplier leftY, DoubleSupplier leftX, DoubleSupplier rightX) {
+        this.drivebaseSubsystem = drivebaseSubsystem;
 
         this.leftY = leftY;
         this.leftX = leftX;

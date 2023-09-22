@@ -8,7 +8,12 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
         TELEOP, AUTO
     }
 
+    private RobotContainer robotContainer;
+
     public Robot(OpModeType opModeType) {
+
+        robotContainer = new RobotContainer();
+
         //check if opmode is auto or tele and init accordingly
         if(opModeType == OpModeType.TELEOP) {
             initTele();
@@ -18,7 +23,7 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
     }
 
     public void initTele() {
-        
+
     }
 
     public void initAuto() {
