@@ -52,16 +52,14 @@ public class DrivebaseSubsystem extends SubsystemBase {
                         motorPositions[0],
                         motorPositions[1],
                         motorPositions[2],
-                        motorPositions[3]
-                );
+                        motorPositions[3]);
 
         odometry =
                 new MecanumDriveOdometry(
                         kinematics,
                         Rotation2d.fromDegrees(0),
                         //FIXME placeholder starting values. have to fix for actual comp
-                        new Pose2d(1, 2, Rotation2d.fromDegrees(0))
-                );
+                        new Pose2d(1, 2, Rotation2d.fromDegrees(0)));
 
     }
 

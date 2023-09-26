@@ -15,7 +15,13 @@ public class RobotContainer {
 
     public RobotContainer() {
 
-        CommandScheduler.getInstance().setDefaultCommand(drivebaseSubsystem, new DrivebaseCommand(drivebaseSubsystem, brandon::getLeftY, brandon::getLeftX, brandon::getRightX));
+        CommandScheduler.getInstance().setDefaultCommand(
+                drivebaseSubsystem,
+                new DrivebaseCommand(
+                        drivebaseSubsystem,
+                        brandon::getLeftY,
+                        brandon::getLeftX,
+                        brandon::getRightX));
 
     }
 

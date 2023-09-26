@@ -22,11 +22,6 @@ public class DrivebaseCommand extends CommandBase {
     }
 
     @Override
-    public void initialize() {
-
-    }
-
-    @Override
     public void execute() {
         drivebaseSubsystem.driveMotors(leftY, leftX, rightX);
     }
@@ -38,6 +33,9 @@ public class DrivebaseCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-
+        drivebaseSubsystem.driveMotors(
+                () -> {return 0;},
+                () -> {return 0;},
+                () -> {return 0;});
     }
 }
