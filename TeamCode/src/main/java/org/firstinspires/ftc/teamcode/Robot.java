@@ -22,12 +22,11 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
         }
     }
 
-    public void initTele() {
+    private void initTele() {
 
     }
 
-    public void initAuto() {
+    private void initAuto() {
         
     }
-
 }

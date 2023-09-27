@@ -15,6 +15,8 @@ public class RobotContainer {
 
     public RobotContainer() {
 
+        CommandScheduler.getInstance().registerSubsystem(drivebaseSubsystem);
+
         CommandScheduler.getInstance().setDefaultCommand(
                 drivebaseSubsystem,
                 new DrivebaseCommand(

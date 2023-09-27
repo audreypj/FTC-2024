@@ -30,6 +30,8 @@ public class DrivebaseSubsystem extends SubsystemBase {
     private MecanumDriveKinematics kinematics;
     private MecanumDriveOdometry odometry;
 
+    private DoubleSupplier leftY, leftX, rightX;
+
     //FIXME placeholders. put actual positions once get finalized robot
     private Translation2d[] motorPositions = {new Translation2d(), new Translation2d(), new Translation2d(), new Translation2d()};
 
@@ -47,6 +49,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
         mecanum = new MecanumDrive(true, fL, fR, bL, bR);
 
+        leftY = () -> {return 0;};
+        leftX = () -> {return 0;};
+        rightX = () -> {return 0;};
+
         kinematics =
                 new MecanumDriveKinematics(
                         motorPositions[0],
@@ -60,16 +66,17 @@ public class DrivebaseSubsystem extends SubsystemBase {
                         Rotation2d.fromDegrees(0),
                         //FIXME placeholder starting values. have to fix for actual comp
                         new Pose2d(1, 2, Rotation2d.fromDegrees(0)));
-
     }
 
     public void driveMotors(DoubleSupplier leftY, DoubleSupplier leftX, DoubleSupplier rightX) {
-        mecanum.driveRobotCentric(leftY.getAsDouble(), leftX.getAsDouble(), rightX.getAsDouble());
+        this.leftY = leftY;
+        this.leftX = leftX;
+        this.rightX = rightX;
     }
 
     @Override
     public void periodic() {
-
+        mecanum.driveRobotCentric(leftY.getAsDouble(), leftX.getAsDouble(), rightX.getAsDouble());
     }
 
 }
