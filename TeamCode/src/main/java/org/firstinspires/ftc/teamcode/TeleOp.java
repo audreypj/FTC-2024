@@ -14,12 +14,12 @@ public class TeleOp extends OpMode {
 
     @Override
     public void start() {
-        robot.enable();
+        com.arcrobotics.ftclib.command.Robot.enable();
     }
 
     @Override
     public void stop() {
-        robot.disable();
+        com.arcrobotics.ftclib.command.Robot.disable();
     }
 
     @Override

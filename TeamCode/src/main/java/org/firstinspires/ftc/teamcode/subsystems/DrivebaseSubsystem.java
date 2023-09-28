@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
@@ -11,6 +11,7 @@ import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveKinematics;
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveOdometry;
+import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveWheelSpeeds;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -23,6 +24,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
     private Telemetry tele;
 
     private Pose2d robotPose = new Pose2d();
+    private MecanumDriveWheelSpeeds wheelSpeeds;
 
     private Motor fL,fR,bL,bR;
     private GyroEx gyro;
@@ -72,6 +74,12 @@ public class DrivebaseSubsystem extends SubsystemBase {
         this.leftY = leftY;
         this.leftX = leftX;
         this.rightX = rightX;
+    }
+
+    private void odometryPeriodic() {
+        odometry.updateWithTime();
+
+
     }
 
     @Override

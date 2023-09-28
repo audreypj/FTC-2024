@@ -1,6 +1,8 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
+
+import org.firstinspires.ftc.teamcode.subsystems.DrivebaseSubsystem;
 
 import java.util.function.DoubleSupplier;
 
@@ -16,11 +18,15 @@ public class DrivebaseCommand extends CommandBase {
         this.leftY = leftY;
         this.leftX = leftX;
         this.rightX = rightX;
+
+        drivebaseSubsystem.driveMotors(leftY, leftX, rightX);
+
+        addRequirements(drivebaseSubsystem);
     }
 
     @Override
     public void execute() {
-        drivebaseSubsystem.driveMotors(leftY, leftX, rightX);
+        //drivebaseSubsystem.driveMotors(leftY, leftX, rightX);
     }
 
     @Override

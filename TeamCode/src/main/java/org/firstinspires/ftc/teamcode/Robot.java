@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 
 public class Robot extends com.arcrobotics.ftclib.command.Robot {
@@ -9,6 +10,8 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
     }
 
     private RobotContainer robotContainer;
+
+    private CommandBase autonomousCommand;
 
     public Robot(OpModeType opModeType) {
 
