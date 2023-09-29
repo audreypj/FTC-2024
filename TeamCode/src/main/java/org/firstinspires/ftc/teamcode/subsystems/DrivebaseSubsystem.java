@@ -77,7 +77,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
     }
 
     private void odometryPeriodic() {
-        odometry.updateWithTime();
+        //odometry.updateWithTime();
 
 
     }
@@ -86,5 +86,4 @@ public class DrivebaseSubsystem extends SubsystemBase {
     public void periodic() {
         mecanum.driveRobotCentric(leftY.getAsDouble(), leftX.getAsDouble(), rightX.getAsDouble());
     }
-
 }

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.util.Timing;
 
 public class Robot extends com.arcrobotics.ftclib.command.Robot {
 
@@ -10,12 +11,14 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
     }
 
     private RobotContainer robotContainer;
+    private Timing.Timer timer;
 
     private CommandBase autonomousCommand;
 
     public Robot(OpModeType opModeType) {
 
         robotContainer = new RobotContainer();
+        timer = new Timing.Timer(600);
 
         //check if opmode is auto or tele and init accordingly
         if(opModeType == OpModeType.TELEOP) {
@@ -27,9 +30,22 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
 
     private void initTele() {
 
+        if(autonomousCommand != null) {
+
+        } else {
+            timer.start();
+        }
+
     }
 
     private void initAuto() {
-        
+        timer.start();
     }
+
+    public static double currentTimestamp() {
+        //FIXME make this return the proper value - cast from long to double
+        return 0;
+    }
+
+
 }
