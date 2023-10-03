@@ -9,9 +9,13 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
+    private HardwareMap hMap;
+
     private Motor elevatorMotor;
 
-    public ElevatorSubsystem(HardwareMap hMap, Telemetry tele) {
+    public ElevatorSubsystem(HardwareMap hMap) {
+
+        this.hMap = hMap;
 
         elevatorMotor = new MotorEx(hMap, "eleMotor");
 

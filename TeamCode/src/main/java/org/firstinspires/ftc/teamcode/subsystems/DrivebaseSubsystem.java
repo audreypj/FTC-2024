@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.geometry.Pose2d;
@@ -21,30 +23,30 @@ import java.util.function.DoubleSupplier;
 public class DrivebaseSubsystem extends SubsystemBase {
 
     private HardwareMap hMap;
-    private Telemetry tele;
-
-    private Pose2d robotPose = new Pose2d();
-    private MecanumDriveWheelSpeeds wheelSpeeds;
+    private FtcDashboard dashboard = FtcDashboard.getInstance();
+    private TelemetryPacket telemetryPacket = new TelemetryPacket();
 
     private Motor fL,fR,bL,bR;
     private GyroEx gyro;
+
     private MecanumDrive mecanum;
     private MecanumDriveKinematics kinematics;
     private MecanumDriveOdometry odometry;
+    private Pose2d robotPose = new Pose2d();
+    private MecanumDriveWheelSpeeds wheelSpeeds;
 
     private DoubleSupplier leftY, leftX, rightX;
 
     //FIXME placeholders. put actual positions once get finalized robot
     private Translation2d[] motorPositions = {new Translation2d(), new Translation2d(), new Translation2d(), new Translation2d()};
 
-    public DrivebaseSubsystem(HardwareMap hMap, Telemetry tele) {
+    public DrivebaseSubsystem(HardwareMap hMap) {
         this.hMap = hMap;
-        this.tele = tele;
 
         fL = new MotorEx(hMap, "fL");
         fR = new MotorEx(hMap, "fR");
         bL = new MotorEx(hMap, "bL");
-        bR = new MotorEx (hMap, "bR");
+        bR = new MotorEx(hMap, "bR");
 
         gyro = new RevIMU(hMap);
         gyro.init();
@@ -68,6 +70,8 @@ public class DrivebaseSubsystem extends SubsystemBase {
                         Rotation2d.fromDegrees(0),
                         //FIXME placeholder starting values. have to fix for actual comp
                         new Pose2d(1, 2, Rotation2d.fromDegrees(0)));
+
+        //telemetryPacket.put("fL Pos", () -> {});
     }
 
     public void driveMotors(DoubleSupplier leftY, DoubleSupplier leftX, DoubleSupplier rightX) {
@@ -85,5 +89,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         mecanum.driveRobotCentric(leftY.getAsDouble(), leftX.getAsDouble(), rightX.getAsDouble());
+
+
+        if(false) {
+            dashboard.sendTelemetryPacket(telemetryPacket);
+        }
     }
 }

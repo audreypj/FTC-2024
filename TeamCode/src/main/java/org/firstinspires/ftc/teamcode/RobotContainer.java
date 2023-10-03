@@ -14,7 +14,7 @@ public class RobotContainer {
 
     private final GamepadEx brandon = new GamepadEx(gamepad1);
 
-    private final DrivebaseSubsystem drivebaseSubsystem = new DrivebaseSubsystem(hardwareMap, telemetry);
+    private final DrivebaseSubsystem drivebaseSubsystem = new DrivebaseSubsystem(hardwareMap);
 
     public RobotContainer() {
 
