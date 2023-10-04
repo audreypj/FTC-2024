@@ -5,19 +5,17 @@ import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-
-public class ElevatorSubsystem extends SubsystemBase {
+public class ArmSubsystem extends SubsystemBase {
 
     private HardwareMap hMap;
 
-    private Motor elevatorMotor;
+    private Motor armMotor;
 
-    public ElevatorSubsystem(HardwareMap hMap) {
+    public ArmSubsystem(HardwareMap hMap) {
 
         this.hMap = hMap;
 
-        elevatorMotor = new MotorEx(hMap, "eleMotor");
+        armMotor = new MotorEx(hMap, "armMotor");
 
     }
 
