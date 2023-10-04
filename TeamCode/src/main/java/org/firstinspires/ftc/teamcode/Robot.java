@@ -11,7 +11,7 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
     }
 
     private RobotContainer robotContainer;
-    private Timing.Timer timer;
+    private static Timing.Timer timer;
 
     private CommandBase autonomousCommand;
 
@@ -43,9 +43,7 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
     }
 
     public static double currentTimestamp() {
-        //FIXME make this return the proper value - cast from long to double
-        return 0;
+        return timer.elapsedTime();
     }
-
 
 }
