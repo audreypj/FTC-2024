@@ -38,9 +38,6 @@ public class DrivebaseSubsystem extends SubsystemBase {
     private MecanumDriveOdometry odometry;
     private Pose2d robotPose = new Pose2d();
 
-    //FIXME need to actually declare wheelspeeds. havent actually put any values, figure that out
-    private MecanumDriveWheelSpeeds wheelSpeeds;
-
     private DoubleSupplier leftY, leftX, rightX;
 
     //FIXME placeholders. put actual positions once get finalized robot
@@ -85,6 +82,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
     //FIXME just a debug method - just to check if motor encoder works
     private double getMotorPos() {
         return fL.getCurrentPosition();
+    }
+
+    private MecanumDriveWheelSpeeds calculateWheelSpeeds() {
+        return new MecanumDriveWheelSpeeds();
     }
 
     public Rotation2d getConsistentGyroAngle() {
