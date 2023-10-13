@@ -30,7 +30,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
     private FtcDashboard dashboard = FtcDashboard.getInstance();
     private TelemetryPacket telemetryPacket = new TelemetryPacket();
 
-    private Motor fL,fR,bL,bR;
+    private MotorEx fL,fR,bL,bR;
     private GyroEx gyro;
 
     private MecanumDrive mecanum;
@@ -46,10 +46,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
     public DrivebaseSubsystem(HardwareMap hMap) {
         this.hMap = hMap;
 
-        fL = new MotorEx(hMap, "fL");
-        fR = new MotorEx(hMap, "fR");
-        bL = new MotorEx(hMap, "bL");
-        bR = new MotorEx(hMap, "bR");
+        fL = new MotorEx(hMap, "fL", Motor.GoBILDA.RPM_312);
+        fR = new MotorEx(hMap, "fR", Motor.GoBILDA.RPM_312);
+        bL = new MotorEx(hMap, "bL", Motor.GoBILDA.RPM_312);
+        bR = new MotorEx(hMap, "bR", Motor.GoBILDA.RPM_312);
 
         gyro = new RevIMU(hMap);
         gyro.init();
@@ -85,7 +85,15 @@ public class DrivebaseSubsystem extends SubsystemBase {
     }
 
     private MecanumDriveWheelSpeeds calculateWheelSpeeds() {
-        return new MecanumDriveWheelSpeeds();
+        return new MecanumDriveWheelSpeeds(
+                wheelTickToMeter(fL.getCorrectedVelocity()),
+                wheelTickToMeter(fR.getCorrectedVelocity()),
+                wheelTickToMeter(bL.getCorrectedVelocity()),
+                wheelTickToMeter(bR.getCorrectedVelocity()));
+    }
+
+    private double wheelTickToMeter(double ticks) {
+        return ticks * ((0.096 * Math.PI) / 537.6);
     }
 
     public Rotation2d getConsistentGyroAngle() {
@@ -99,13 +107,19 @@ public class DrivebaseSubsystem extends SubsystemBase {
     }
 
     private void odometryPeriodic() {
-        this.robotPose = odometry.updateWithTime(Robot.currentTimestamp(), getConsistentGyroAngle(), wheelSpeeds);
+        this.robotPose = odometry.updateWithTime(Robot.currentTimestamp(), getConsistentGyroAngle(), calculateWheelSpeeds());
+    }
+
+    private void drivePeriodic() {
+        mecanum.driveRobotCentric(leftY.getAsDouble(), leftX.getAsDouble(), rightX.getAsDouble());
     }
 
     @Override
     public void periodic() {
-        mecanum.driveRobotCentric(leftY.getAsDouble(), leftX.getAsDouble(), rightX.getAsDouble());
 
+        odometryPeriodic();
+
+        drivePeriodic();
 
         if(SHOW_DEBUG_DATA) {
             dashboard.sendTelemetryPacket(telemetryPacket);

@@ -6,5 +6,4 @@ public class Util {
         return (degrees % 360 + 360) % 360;
     }
 
-    public static double encoderTicksToInches()
 }
