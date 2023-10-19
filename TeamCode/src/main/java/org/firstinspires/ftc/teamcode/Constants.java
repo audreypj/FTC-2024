@@ -7,16 +7,11 @@ public final class Constants {
         public static final boolean SHOW_DEBUG_DATA = false;
     }
 
-    public static final class Arm {
+    public static final class Elevator {
         public static final class Setpoints {
-            public static final double MIN_HEIGHT = 0;
+            public static final double MIN_HEIGHT_INCHES = 0;
             //FIXME placeholder values
-            public static final double MAX_HEIGHT = 6;
-        }
-
-        public static final class Thresholds {
-            public static final double MIN_THRESHOLD = 0
-                    
+            public static final double MAX_HEIGHT_INCHES = 6;
         }
     }
 

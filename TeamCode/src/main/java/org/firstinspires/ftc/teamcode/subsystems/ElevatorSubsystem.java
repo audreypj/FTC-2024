@@ -45,30 +45,41 @@ public class ElevatorSubsystem extends SubsystemBase {
         this.targetHeight =
                 MathUtils.clamp(
                         targetPosition,
-                        Constants.Arm.Setpoints.MIN_HEIGHT,
-                        Constants.Arm.Setpoints.MAX_HEIGHT);
+                        Constants.Elevator.Setpoints.MIN_HEIGHT_INCHES,
+                        Constants.Elevator.Setpoints.MAX_HEIGHT_INCHES);
     }
 
     public double getCurrentElevatorHeight() {
         return ticksToInches(elevatorMotor.getCurrentPosition());
     }
 
-    //if the slide extends past the min or max extension then pizdecs - have to fix it
+    private double determineTargetHeight() {
+        if(!currentOrTargetIsSafe()) {
+            targetHeight = Constants.Elevator.Setpoints.MIN_HEIGHT_INCHES;
+        }
+        return targetHeight;
+    }
+
+    private boolean currentOrTargetIsSafe() {
+        return withinSafeRange(getCurrentElevatorHeight())
+               || withinSafeRange(targetHeight);
+    }
+
     private boolean withinSafeRange(double position) {
-        return position;
+        return position > Constants.Elevator.Setpoints.MIN_HEIGHT_INCHES
+               || position < Constants.Elevator.Setpoints.MAX_HEIGHT_INCHES;
     }
 
     private void drivePeriodic() {
+       elevatorOutput = elevatorController.calculate(getCurrentElevatorHeight(), determineTargetHeight());
 
-       elevatorOutput =
-               elevatorController.calculate(
-                       getCurrentElevatorHeight(), targetHeight);
-
-       elevatorMotor.set(elevatorOutput);
+       elevatorMotor.set(MathUtils.clamp(elevatorOutput, -0.3, 0.3));
     }
 
     @Override
     public void periodic() {
+
+        drivePeriodic();
 
     }
 }
