@@ -36,9 +36,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         elevatorMotor.resetEncoder();
     }
 
-    private double ticksToInches(double ticks) {
-        //FIXME actually do the math
-        return 0;
+    private double ticksToInchesHeight(double ticks) {
+        //FIXME check to make suer this works, actually add the slant angle,
+        //check to see if I have to add the drivebase height or just include the elevator height (total height or not basically)
+        return Math.sin(Constants.Elevator.ELEVATOR_SLANT_ANGLE) * ticks;
     }
 
     public void setElevatorTargetInches(double targetPosition) {
@@ -50,7 +51,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public double getCurrentElevatorHeight() {
-        return ticksToInches(elevatorMotor.getCurrentPosition());
+        return ticksToInchesHeight(elevatorMotor.getCurrentPosition());
     }
 
     private double determineTargetHeight() {
