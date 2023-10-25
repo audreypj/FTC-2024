@@ -11,6 +11,8 @@ public final class Constants {
 
         //FIXME Placeholder
         public static final double ELEVATOR_SLANT_ANGLE = 0;
+        //FIXME Placeholder
+        public static final double ELEVATOR_TICK_INCH_MULTIPLIER = 0;
 
         public static final class Setpoints {
             public static final double MIN_HEIGHT_INCHES = 0;

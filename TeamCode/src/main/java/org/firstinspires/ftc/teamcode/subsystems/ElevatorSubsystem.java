@@ -13,7 +13,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     private HardwareMap hMap;
 
-    private Motor elevatorMotor;
+    private MotorEx elevatorMotor;
     private PIDController elevatorController;
 
     private double elevatorOutput = 0;
@@ -23,10 +23,14 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         this.hMap = hMap;
 
+        //FIXME check if the motor has to be inverted
         elevatorMotor = new MotorEx(hMap, "eleMotor");
 
+        //The elevator always has to be inited in the lowest position
         elevatorMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        elevatorMotor.resetEncoder();
 
+        //FIXME tune pid
         elevatorController = new PIDController(0.01, 0, 0);
 
         //set up ftc dashboard so i can test how the motor encoder/position works
@@ -37,9 +41,11 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     private double ticksToInchesHeight(double ticks) {
-        //FIXME check to make suer this works, actually add the slant angle,
+        //FIXME check to make suer this works, actually add the slant angle, conver to inches
         //check to see if I have to add the drivebase height or just include the elevator height (total height or not basically)
-        return Math.sin(Constants.Elevator.ELEVATOR_SLANT_ANGLE) * ticks;
+        return Constants.Elevator.ELEVATOR_TICK_INCH_MULTIPLIER * (Math.sin(Constants.Elevator.ELEVATOR_SLANT_ANGLE) * ticks);
+        // tickToAngleConstant(sin(angle) * ticks)
+        //tickToAngle = circumferenceinches/cpr
     }
 
     public void setElevatorTargetInches(double targetPosition) {
