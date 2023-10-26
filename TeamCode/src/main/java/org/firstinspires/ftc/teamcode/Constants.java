@@ -22,4 +22,14 @@ public final class Constants {
         }
     }
 
+    public static final class Intake {
+
+
+        public static final class ModePowers {
+            //FIXME placeholder values
+            public static final double OFF = 0;
+            public static final double INTAKE = 0;
+        }
+    }
+
 }

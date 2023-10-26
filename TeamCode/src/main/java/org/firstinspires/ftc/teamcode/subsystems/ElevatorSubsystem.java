@@ -11,8 +11,6 @@ import org.firstinspires.ftc.teamcode.Constants;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
-    private HardwareMap hMap;
-
     private MotorEx elevatorMotor;
     private PIDController elevatorController;
 
@@ -20,8 +18,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     private double targetHeight = 0;
 
     public ElevatorSubsystem(HardwareMap hMap) {
-
-        this.hMap = hMap;
 
         //FIXME check if the motor has to be inverted
         elevatorMotor = new MotorEx(hMap, "eleMotor");

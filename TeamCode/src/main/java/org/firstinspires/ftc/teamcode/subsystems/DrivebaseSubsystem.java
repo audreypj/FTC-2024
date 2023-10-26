@@ -26,7 +26,6 @@ import java.util.function.DoubleSupplier;
 
 public class DrivebaseSubsystem extends SubsystemBase {
 
-    private HardwareMap hMap;
     private FtcDashboard dashboard = FtcDashboard.getInstance();
     private TelemetryPacket telemetryPacket = new TelemetryPacket();
 
@@ -47,7 +46,6 @@ public class DrivebaseSubsystem extends SubsystemBase {
     private Translation2d[] motorPositions = {new Translation2d(), new Translation2d(), new Translation2d(), new Translation2d()};
 
     public DrivebaseSubsystem(HardwareMap hMap) {
-        this.hMap = hMap;
 
         fL = new MotorEx(hMap, "fL");
         fR = new MotorEx(hMap, "fR");
