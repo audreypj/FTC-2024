@@ -77,6 +77,10 @@ public class ElevatorSubsystem extends SubsystemBase {
                || position < Constants.Elevator.Setpoints.MAX_HEIGHT_INCHES;
     }
 
+    public boolean atTarget() {
+        return false;
+    }
+
     private void drivePeriodic() {
        elevatorOutput = elevatorController.calculate(getCurrentElevatorHeight(), determineTargetHeight());
 
