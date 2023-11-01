@@ -13,7 +13,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public enum RunModes {
-        OFF, INTAKE
+        OFF, INTAKE, OUTTAKE
     }
 
     private MotorEx intakeMotor;
@@ -38,10 +38,17 @@ public class IntakeSubsystem extends SubsystemBase {
         currentRunMode = mode;
     }
 
+    public RunModes getRunMode() {
+        return currentRunMode;
+    }
+
     private void runModePeriodic() {
         switch(currentRunMode) {
             case INTAKE:
                 intakeMotor.set(Constants.Intake.ModePowers.INTAKE);
+                break;
+            case OUTTAKE:
+                intakeMotor.set(Constants.Intake.ModePowers.OUTTAKE);
                 break;
             case OFF:
             default:

@@ -11,23 +11,23 @@ import org.firstinspires.ftc.teamcode.Constants;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
-    private MotorEx elevatorMotor;
+    private final MotorEx elevatorMotor;
     private PIDController elevatorController;
 
     private double elevatorOutput = 0;
-    private double targetHeight = 0;
+    private double targetExtension = 0;
 
     public ElevatorSubsystem(HardwareMap hMap) {
 
         //FIXME check if the motor has to be inverted
-        elevatorMotor = new MotorEx(hMap, "eleMotor");
+        elevatorMotor = new MotorEx(hMap, "eleMotor", Motor.GoBILDA.RPM_312);
 
         //The elevator always has to be inited in the lowest position
         elevatorMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         elevatorMotor.resetEncoder();
 
         //FIXME tune pid
-        elevatorController = new PIDController(0.01, 0, 0);
+        elevatorController = new PIDController(0.05, 0, 0);
 
         //set up ftc dashboard so i can test how the motor encoder/position works
     }
@@ -36,41 +36,42 @@ public class ElevatorSubsystem extends SubsystemBase {
         elevatorMotor.resetEncoder();
     }
 
-    private double ticksToInchesHeight(double ticks) {
-        //FIXME check to make suer this works, actually add the slant angle, conver to inches
-        //check to see if I have to add the drivebase height or just include the elevator height (total height or not basically)
-        return Constants.Elevator.ELEVATOR_TICK_INCH_MULTIPLIER * (Math.sin(Constants.Elevator.ELEVATOR_SLANT_ANGLE) * ticks);
-        // tickToAngleConstant(sin(angle) * ticks)
-        //tickToAngle = circumferenceinches/cpr
+    //check if works
+    private double ticksToInchesExtension(double ticks) {
+        return ((38.2 * Math.PI) * ticks) / Motor.GoBILDA.RPM_312.getCPR();
+    }
+
+    private double extensionToHeightInches(double inches) {
+        return (Math.sin(Constants.Elevator.ELEVATOR_SLANT_ANGLE) * inches);
     }
 
     public void setElevatorTargetInches(double targetPosition) {
-        this.targetHeight =
+        this.targetExtension =
                 MathUtils.clamp(
                         targetPosition,
-                        Constants.Elevator.Setpoints.MIN_HEIGHT_INCHES,
-                        Constants.Elevator.Setpoints.MAX_HEIGHT_INCHES);
+                        Constants.Elevator.Setpoints.MIN_EXTENSION_INCHES,
+                        Constants.Elevator.Setpoints.MAX_EXTENSION_INCHES);
     }
 
-    public double getCurrentElevatorHeight() {
-        return ticksToInchesHeight(elevatorMotor.getCurrentPosition());
+    private double getCurrentElevatorExtension() {
+        return ticksToInchesExtension(elevatorMotor.getCurrentPosition());
     }
 
-    private double determineTargetHeight() {
+    private double determineTargetExtension() {
         if(!currentOrTargetIsSafe()) {
-            targetHeight = Constants.Elevator.Setpoints.MIN_HEIGHT_INCHES;
+            targetExtension = Constants.Elevator.Setpoints.MIN_EXTENSION_INCHES;
         }
-        return targetHeight;
+        return targetExtension;
     }
 
     private boolean currentOrTargetIsSafe() {
-        return withinSafeRange(getCurrentElevatorHeight())
-               || withinSafeRange(targetHeight);
+        return withinSafeRange(getCurrentElevatorExtension())
+               || withinSafeRange(targetExtension);
     }
 
     private boolean withinSafeRange(double position) {
-        return position > Constants.Elevator.Setpoints.MIN_HEIGHT_INCHES
-               || position < Constants.Elevator.Setpoints.MAX_HEIGHT_INCHES;
+        return position > Constants.Elevator.Setpoints.MIN_EXTENSION_INCHES
+               || position < Constants.Elevator.Setpoints.MAX_EXTENSION_INCHES;
     }
 
     public boolean atTarget() {
@@ -78,7 +79,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     private void drivePeriodic() {
-       elevatorOutput = elevatorController.calculate(getCurrentElevatorHeight(), determineTargetHeight());
+       elevatorOutput = elevatorController.calculate(getCurrentElevatorExtension(), determineTargetExtension());
 
        elevatorMotor.set(MathUtils.clamp(elevatorOutput, -0.3, 0.3));
     }

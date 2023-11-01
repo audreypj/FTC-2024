@@ -4,13 +4,16 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gam
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.teamcode.commands.DrivebaseCommand;
 import org.firstinspires.ftc.teamcode.commands.ElevatorCommand;
+import org.firstinspires.ftc.teamcode.commands.SetIntakeModeCommand;
 import org.firstinspires.ftc.teamcode.subsystems.DrivebaseSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ElevatorSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 
 public class RobotContainer {
 
@@ -18,10 +21,13 @@ public class RobotContainer {
 
     private final DrivebaseSubsystem drivebaseSubsystem = new DrivebaseSubsystem(hardwareMap);
     private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem(hardwareMap);
+    private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem(hardwareMap);
 
     public RobotContainer() {
 
         CommandScheduler.getInstance().registerSubsystem(drivebaseSubsystem);
+        CommandScheduler.getInstance().registerSubsystem(elevatorSubsystem);
+        CommandScheduler.getInstance().registerSubsystem(intakeSubsystem);
 
         CommandScheduler.getInstance().setDefaultCommand(
                 drivebaseSubsystem,
@@ -34,13 +40,20 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         brandon.getGamepadButton(GamepadKeys.Button.Y)
-                .whenPressed(new ElevatorCommand(elevatorSubsystem, Constants.Elevator.Setpoints.MAX_HEIGHT_INCHES));
+                .whenPressed(new ElevatorCommand(elevatorSubsystem, Constants.Elevator.Setpoints.MAX_EXTENSION_INCHES));
 
         brandon.getGamepadButton(GamepadKeys.Button.B)
                 .whenPressed(new ElevatorCommand(elevatorSubsystem, Constants.Elevator.Setpoints.MID_HEIGHT_INCHES));
 
         brandon.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(new ElevatorCommand(elevatorSubsystem, Constants.Elevator.Setpoints.MIN_HEIGHT_INCHES));
+                .whenPressed(new ElevatorCommand(elevatorSubsystem, Constants.Elevator.Setpoints.MIN_EXTENSION_INCHES));
+
+        new Trigger(() -> brandon.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.3)
+                .whenActive(new SetIntakeModeCommand(intakeSubsystem, IntakeSubsystem.RunModes.INTAKE));
+
+        new Trigger(() -> brandon.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.3)
+                .whenActive(new SetIntakeModeCommand(intakeSubsystem, IntakeSubsystem.RunModes.OUTTAKE));
+
     }
 
 }
