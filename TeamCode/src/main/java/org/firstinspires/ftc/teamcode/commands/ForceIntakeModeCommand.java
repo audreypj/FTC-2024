@@ -4,13 +4,13 @@ import com.arcrobotics.ftclib.command.CommandBase;
 
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 
-public class SetIntakeModeCommand extends CommandBase {
+public class ForceIntakeModeCommand extends CommandBase {
 
     private IntakeSubsystem intakeSubsystem;
 
     private IntakeSubsystem.RunModes runMode;
 
-    public SetIntakeModeCommand(IntakeSubsystem intakeSubsystem, IntakeSubsystem.RunModes runMode) {
+    public ForceIntakeModeCommand(IntakeSubsystem intakeSubsystem, IntakeSubsystem.RunModes runMode) {
 
         this.intakeSubsystem = intakeSubsystem;
         this.runMode = runMode;

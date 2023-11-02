@@ -4,13 +4,13 @@ import com.arcrobotics.ftclib.command.CommandBase;
 
 import org.firstinspires.ftc.teamcode.subsystems.ElevatorSubsystem;
 
-public class ElevatorCommand extends CommandBase {
+public class LinearSlideCommand extends CommandBase {
 
     private ElevatorSubsystem elevatorSubsystem;
 
     private double targetHeight;
 
-    public ElevatorCommand(ElevatorSubsystem elevatorSubsystem, double targetHeight) {
+    public LinearSlideCommand(ElevatorSubsystem elevatorSubsystem, double targetHeight) {
 
         this.elevatorSubsystem = elevatorSubsystem;
 

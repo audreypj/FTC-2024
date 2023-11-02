@@ -9,8 +9,9 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.teamcode.commands.DrivebaseCommand;
-import org.firstinspires.ftc.teamcode.commands.ElevatorCommand;
-import org.firstinspires.ftc.teamcode.commands.SetIntakeModeCommand;
+import org.firstinspires.ftc.teamcode.commands.LinearSlideCommand;
+import org.firstinspires.ftc.teamcode.commands.ForceIntakeModeCommand;
+import org.firstinspires.ftc.teamcode.commands.WristRateCommand;
 import org.firstinspires.ftc.teamcode.subsystems.DrivebaseSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ElevatorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
@@ -40,19 +41,25 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         brandon.getGamepadButton(GamepadKeys.Button.Y)
-                .whenPressed(new ElevatorCommand(elevatorSubsystem, Constants.Elevator.Setpoints.MAX_EXTENSION_INCHES));
+                .whenPressed(new LinearSlideCommand(elevatorSubsystem, Constants.Elevator.Setpoints.MAX_EXTENSION_INCHES));
 
         brandon.getGamepadButton(GamepadKeys.Button.B)
-                .whenPressed(new ElevatorCommand(elevatorSubsystem, Constants.Elevator.Setpoints.MID_HEIGHT_INCHES));
+                .whenPressed(new LinearSlideCommand(elevatorSubsystem, Constants.Elevator.Setpoints.MID_HEIGHT_INCHES));
 
         brandon.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(new ElevatorCommand(elevatorSubsystem, Constants.Elevator.Setpoints.MIN_EXTENSION_INCHES));
+                .whenPressed(new LinearSlideCommand(elevatorSubsystem, Constants.Elevator.Setpoints.MIN_EXTENSION_INCHES));
+
+        brandon.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                .whenPressed(new WristRateCommand(elevatorSubsystem, -0.3));
+
+        brandon.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+                .whenPressed(new WristRateCommand(elevatorSubsystem, 0.3));
 
         new Trigger(() -> brandon.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.3)
-                .whenActive(new SetIntakeModeCommand(intakeSubsystem, IntakeSubsystem.RunModes.INTAKE));
+                .whenActive(new ForceIntakeModeCommand(intakeSubsystem, IntakeSubsystem.RunModes.INTAKE));
 
         new Trigger(() -> brandon.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.3)
-                .whenActive(new SetIntakeModeCommand(intakeSubsystem, IntakeSubsystem.RunModes.OUTTAKE));
+                .whenActive(new ForceIntakeModeCommand(intakeSubsystem, IntakeSubsystem.RunModes.OUTTAKE));
 
     }
 
