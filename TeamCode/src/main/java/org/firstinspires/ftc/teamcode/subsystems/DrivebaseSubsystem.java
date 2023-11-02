@@ -13,12 +13,12 @@ import com.arcrobotics.ftclib.hardware.GyroEx;
 import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
+import com.arcrobotics.ftclib.kinematics.wpilibkinematics.ChassisSpeeds;
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveKinematics;
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveOdometry;
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveWheelSpeeds;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.Util;
 
@@ -37,6 +37,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
     private MecanumDriveKinematics kinematics;
     private MecanumDriveOdometry odometry;
     private Pose2d robotPose = new Pose2d();
+    private ChassisSpeeds chassisSpeeds = new ChassisSpeeds();
 
     private DoubleSupplier leftY, leftX, rightX;
 
@@ -100,10 +101,14 @@ public class DrivebaseSubsystem extends SubsystemBase {
         return Rotation2d.fromDegrees(Util.normalizeDegrees(gyro.getAbsoluteHeading()));
     }
 
-    public void driveMotors(DoubleSupplier leftY, DoubleSupplier leftX, DoubleSupplier rightX) {
+    public void driveRawJoystick(DoubleSupplier leftY, DoubleSupplier leftX, DoubleSupplier rightX) {
         this.leftY = leftY;
         this.leftX = leftX;
         this.rightX = rightX;
+    }
+
+    public void drive(ChassisSpeeds chassisSpeeds) {
+        this.chassisSpeeds = chassisSpeeds;
     }
 
     private void odometryPeriodic() {
@@ -111,15 +116,21 @@ public class DrivebaseSubsystem extends SubsystemBase {
     }
 
     private void drivePeriodic() {
-        mecanum.driveRobotCentric(leftY.getAsDouble(), leftX.getAsDouble(), rightX.getAsDouble());
+        MecanumDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
+
+        mecanum.driveWithMotorPowers(
+                wheelSpeeds.frontLeftMetersPerSecond,
+                wheelSpeeds.frontRightMetersPerSecond,
+                wheelSpeeds.rearLeftMetersPerSecond,
+                wheelSpeeds.rearRightMetersPerSecond);
     }
 
     @Override
     public void periodic() {
 
-        odometryPeriodic();
-
         drivePeriodic();
+
+        odometryPeriodic();
 
         if(SHOW_DEBUG_DATA) {
             dashboard.sendTelemetryPacket(telemetryPacket);

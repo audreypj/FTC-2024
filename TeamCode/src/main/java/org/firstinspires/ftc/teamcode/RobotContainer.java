@@ -2,12 +2,11 @@ package org.firstinspires.ftc.teamcode;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 
-import org.firstinspires.ftc.teamcode.commands.DrivebaseCommand;
+import org.firstinspires.ftc.teamcode.commands.DefaultDriveCommand;
 import org.firstinspires.ftc.teamcode.subsystems.DrivebaseSubsystem;
 
 public class RobotContainer {
@@ -22,7 +21,7 @@ public class RobotContainer {
 
         CommandScheduler.getInstance().setDefaultCommand(
                 drivebaseSubsystem,
-                new DrivebaseCommand(
+                new DefaultDriveCommand(
                         drivebaseSubsystem,
                         brandon::getLeftY,
                         brandon::getLeftX,
