@@ -36,4 +36,9 @@ public class DefaultDriveCommand extends CommandBase {
         return false;
     }
 
+    @Override
+    public void end(boolean interrupted) {
+        drivebaseSubsystem.drive(new ChassisSpeeds());
+    }
+
 }
