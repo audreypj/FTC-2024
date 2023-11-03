@@ -55,9 +55,9 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
         mecanum = new MecanumDrive(true, fL, fR, bL, bR);
 
-        leftY = () -> {return 0;};
-        leftX = () -> {return 0;};
-        rightX = () -> {return 0;};
+        leftY = () -> 0;
+        leftX = () -> 0;
+        rightX = () -> 0;
 
         kinematics =
                 new MecanumDriveKinematics(
