@@ -8,7 +8,7 @@ import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 
-import org.firstinspires.ftc.teamcode.commands.DrivebaseCommand;
+import org.firstinspires.ftc.teamcode.commands.DefaultDriveCommand;
 import org.firstinspires.ftc.teamcode.commands.LinearSlideCommand;
 import org.firstinspires.ftc.teamcode.commands.ForceIntakeModeCommand;
 import org.firstinspires.ftc.teamcode.commands.WristRateCommand;
@@ -32,7 +32,7 @@ public class RobotContainer {
 
         CommandScheduler.getInstance().setDefaultCommand(
                 drivebaseSubsystem,
-                new DrivebaseCommand(
+                new DefaultDriveCommand(
                         drivebaseSubsystem,
                         brandon::getLeftY,
                         brandon::getLeftX,
