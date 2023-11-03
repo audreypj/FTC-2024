@@ -2,17 +2,20 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.hardware.ServoEx;
+import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.arcrobotics.ftclib.util.MathUtils;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Constants;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
     private final MotorEx elevatorMotor;
-    private final MotorEx wristMotor;
+    private final SimpleServo wristMotor;
     private final PIDController elevatorController;
     private final PIDController wristController;
 
@@ -25,14 +28,13 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         //FIXME check if the motor has to be inverted
         elevatorMotor = new MotorEx(hMap, "eleMotor", Motor.GoBILDA.RPM_312);
-        wristMotor = new MotorEx(hMap, "wristMotor", Motor.GoBILDA.RPM_312);
+        wristMotor = new SimpleServo(hMap, "wristMotor", 0, 360, AngleUnit.DEGREES);
 
         //The elevator always has to be inited in the lowest position
         elevatorMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         elevatorMotor.resetEncoder();
 
-        wristMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        wristMotor.resetEncoder();
+        wristMotor.setPosition(0);
 
         //FIXME tune pid
         elevatorController = new PIDController(0.05, 0, 0);
@@ -48,12 +50,8 @@ public class ElevatorSubsystem extends SubsystemBase {
         elevatorMotor.resetEncoder();
     }
 
-    private double ticksToDegrees(double ticks) {
-        return (ticks * 360) / wristMotor.getCPR();
-    }
-
     private double getCurrentWristAngle() {
-        return ticksToDegrees(wristMotor.getCurrentPosition());
+        return wristMotor.getAngle();
     }
 
     //check if works
@@ -131,9 +129,9 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     private void drivePeriodic() {
        elevatorOutput = elevatorController.calculate(getCurrentElevatorExtension(), determineTargetExtension());
-       wristOutput = wristController.calculate(getCurrentWristAngle(), determineTargetAngle());
 
        elevatorMotor.set(MathUtils.clamp(elevatorOutput, -0.3, 0.3));
+       wristMotor.turnToAngle(targetAngle);
     }
 
     @Override

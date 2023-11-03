@@ -50,10 +50,10 @@ public class RobotContainer {
                 .whenPressed(new LinearSlideCommand(elevatorSubsystem, Constants.Elevator.Setpoints.MIN_EXTENSION_INCHES));
 
         brandon.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .whenPressed(new WristRateCommand(elevatorSubsystem, -0.3));
+                .whenPressed(new WristRateCommand(elevatorSubsystem, 0));
 
         brandon.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenPressed(new WristRateCommand(elevatorSubsystem, 0.3));
+                .whenPressed(new WristRateCommand(elevatorSubsystem, 30));
 
         new Trigger(() -> brandon.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.3)
                 .whenActive(new ForceIntakeModeCommand(intakeSubsystem, IntakeSubsystem.RunModes.INTAKE));
