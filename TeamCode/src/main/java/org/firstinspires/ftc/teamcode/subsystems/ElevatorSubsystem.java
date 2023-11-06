@@ -48,6 +48,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     private void setZero() {
         elevatorMotor.resetEncoder();
+        wristMotor.setPosition(0);
     }
 
     private double getCurrentWristAngle() {
@@ -130,7 +131,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     private void drivePeriodic() {
        elevatorOutput = elevatorController.calculate(getCurrentElevatorExtension(), determineTargetExtension());
 
-       elevatorMotor.set(MathUtils.clamp(elevatorOutput, -0.3, 0.3));
+       elevatorMotor.set(MathUtils.clamp(elevatorOutput + Constants.Elevator.GRAVITY_OFFSET_PERCENT, -0.3, 0.3));
        wristMotor.turnToAngle(targetAngle);
     }
 

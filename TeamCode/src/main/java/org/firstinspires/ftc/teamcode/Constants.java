@@ -12,6 +12,8 @@ public final class Constants {
         //FIXME Placeholder
         public static final double ELEVATOR_SLANT_ANGLE = 36;
 
+        public static final double GRAVITY_OFFSET_PERCENT = 0.03;
+
         public static final class Setpoints {
             //FIXME placeholder values
             public static final double MIN_EXTENSION_INCHES = 0;
@@ -30,6 +32,10 @@ public final class Constants {
 
             public static final double OUTTAKE = -0.3;
         }
+    }
+
+    public static final class Shooter {
+
     }
 
 }
