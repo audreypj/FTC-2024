@@ -1,8 +1,9 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
-import com.arcrobotics.ftclib.hardware.ServoEx;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
@@ -14,13 +15,14 @@ import org.firstinspires.ftc.teamcode.Constants;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
+    private final FtcDashboard dashboard = FtcDashboard.getInstance();
+    private TelemetryPacket packet;
+
     private final MotorEx elevatorMotor;
     private final SimpleServo wristMotor;
     private final PIDController elevatorController;
-    private final PIDController wristController;
 
     private double elevatorOutput = 0;
-    private double wristOutput = 0;
     private double targetExtension = 0;
     private double targetAngle = 0;
 
@@ -38,10 +40,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         //FIXME tune pid
         elevatorController = new PIDController(0.05, 0, 0);
-        wristController = new PIDController(0.05, 0, 0);
 
         elevatorController.setTolerance(0.1);
-        wristController.setTolerance(1);
 
         //set up ftc dashboard so i can test how the motor encoder/position works
     }
@@ -139,6 +139,16 @@ public class ElevatorSubsystem extends SubsystemBase {
     public void periodic() {
 
         drivePeriodic();
+
+        if(Constants.Config.SHOW_DEBUG_DATA) {
+            packet.put("targetExtension", targetExtension);
+            packet.put("targetAngle", targetAngle);
+            packet.put("currentExtension", getCurrentElevatorExtension());
+            packet.put("currentAngle", getCurrentWristAngle());
+            packet.put("extensionOutput", elevatorOutput);
+
+            dashboard.sendTelemetryPacket(packet);
+        }
 
     }
 }
