@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.commands.DefaultDriveCommand;
+import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DrivebaseSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 
@@ -23,10 +24,12 @@ public class RobotContainer {
     private Gamepad gamepad1, gamepad2;
 
     private final DrivebaseSubsystem drivebaseSubsystem;
+    private final ArmSubsystem armSubsystem;
+    private final IntakeSubsystem intakeSubsystem;
 
     public RobotContainer(HardwareMap hardwareMap, Optional<Gamepad> gamepad1, Optional<Gamepad> gamepad2) {
         drivebaseSubsystem  = new DrivebaseSubsystem(hardwareMap);
-        elevatorSubsystem = new ElevatorSubsystem(hardwareMap);
+        armSubsystem = new ArmSubsystem(hardwareMap);
         intakeSubsystem = new IntakeSubsystem(hardwareMap);
 
         CommandScheduler.getInstance().registerSubsystem(drivebaseSubsystem);

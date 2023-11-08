@@ -6,11 +6,16 @@ import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.hardware.motors.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.Constants;
+
 public class IntakeSubsystem extends SubsystemBase {
 
     public enum Modes {
         INTAKE, OUTTAKE, OFF
     }
+
+    private final FtcDashboard dashboard = FtcDashboard.getInstance();
+    private TelemetryPacket packet;
 
     private CRServo intakeServo;
 
@@ -49,7 +54,7 @@ public class IntakeSubsystem extends SubsystemBase {
         applyMode();
 
         if(Constants.Config.SHOW_DEBUG_DATA) {
-            packet.put("currentIntakeMode", currentRunMode);
+            packet.put("currentIntakeMode", currentMode);
 
             dashboard.sendTelemetryPacket(packet);
         }

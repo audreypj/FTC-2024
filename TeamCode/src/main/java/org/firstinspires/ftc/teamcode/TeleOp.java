@@ -8,8 +8,6 @@ import java.util.Optional;
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Primaris")
 public class TeleOp extends OpMode {
 
-
-
     private Robot robot;
 
     @Override
