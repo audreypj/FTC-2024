@@ -14,6 +14,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.commands.DefaultDriveCommand;
 import org.firstinspires.ftc.teamcode.commands.LinearSlideCommand;
 import org.firstinspires.ftc.teamcode.commands.ForceIntakeModeCommand;
+import org.firstinspires.ftc.teamcode.commands.LinearSlideRateCommand;
+import org.firstinspires.ftc.teamcode.commands.WristCommand;
 import org.firstinspires.ftc.teamcode.commands.WristRateCommand;
 import org.firstinspires.ftc.teamcode.subsystems.DrivebaseSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ElevatorSubsystem;
@@ -53,6 +55,12 @@ public class RobotContainer {
                             brandon::getLeftX,
                             brandon::getRightX));
 
+            CommandScheduler.getInstance().setDefaultCommand(
+                    elevatorSubsystem,
+                    new LinearSlideRateCommand(
+                            elevatorSubsystem,
+                            danny::getLeftY));
+
             configureButtonBindings();
         }
     }
@@ -63,25 +71,25 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
 
-        new ButtonObject(brandon, GamepadKeys.Button.Y)
+        new ButtonObject(danny, GamepadKeys.Button.Y)
                 .whenActive(new LinearSlideCommand(elevatorSubsystem, Constants.Elevator.Setpoints.HIGH_SETPOINT));
 
-        new ButtonObject(brandon, GamepadKeys.Button.B)
+        new ButtonObject(danny, GamepadKeys.Button.B)
                 .whenActive(new LinearSlideCommand(elevatorSubsystem, Constants.Elevator.Setpoints.MID_HEIGHT_INCHES));
 
-        new ButtonObject(brandon, GamepadKeys.Button.A)
+        new ButtonObject(danny, GamepadKeys.Button.A)
                 .whenActive(new LinearSlideCommand(elevatorSubsystem, Constants.Elevator.Setpoints.MIN_EXTENSION_INCHES));
 
-        new ButtonObject(brandon, GamepadKeys.Button.LEFT_BUMPER)
-                .whenActive(new WristRateCommand(elevatorSubsystem, 0));
+        new ButtonObject(danny, GamepadKeys.Button.LEFT_BUMPER)
+                .whenActive(new WristCommand(elevatorSubsystem, Constants.Wrist.Setpoints.STOWED));
 
-        new ButtonObject(brandon, GamepadKeys.Button.RIGHT_BUMPER)
-                .whenActive(new WristRateCommand(elevatorSubsystem, 30));
+        new ButtonObject(danny, GamepadKeys.Button.RIGHT_BUMPER)
+                .whenActive(new WristCommand(elevatorSubsystem, Constants.Wrist.Setpoints.SCORE));
 
-        new Trigger(() -> brandon.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.3)
+        new Trigger(() -> danny.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.3)
                 .whenActive(new ForceIntakeModeCommand(intakeSubsystem, IntakeSubsystem.RunModes.INTAKE));
 
-        new Trigger(() -> brandon.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.3)
+        new Trigger(() -> danny.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.3)
                 .whenActive(new ForceIntakeModeCommand(intakeSubsystem, IntakeSubsystem.RunModes.OUTTAKE));
 
     }

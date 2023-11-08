@@ -29,6 +29,6 @@ public class LinearSlideCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return elevatorSubsystem.atTarget();
+        return elevatorSubsystem.atTargetElevator();
     }
 }

@@ -6,4 +6,8 @@ public class Util {
         return (degrees % 360 + 360) % 360;
     }
 
+    public static boolean atTargetTolerance(double input, double tolerance) {
+        return (input >= (input - tolerance)) && (input <= (input + tolerance));
+    }
+
 }

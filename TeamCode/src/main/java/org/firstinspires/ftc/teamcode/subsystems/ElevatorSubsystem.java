@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Util;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
@@ -87,7 +88,9 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     private double determineTargetAngle() {
         if(!currentOrTargetAngleIsSafe()) {
-            targetAngle = 0;
+            targetAngle = Constants.Wrist.Setpoints.STOWED;
+        } else if((getCurrentElevatorExtension() < Constants.Elevator.Setpoints.STOW_WRIST_EXTENSION || targetExtension < Constants.Elevator.Setpoints.STOW_WRIST_EXTENSION)) {
+            targetAngle = Constants.Wrist.Setpoints.STOWED;
         }
         return targetAngle;
     }
@@ -124,15 +127,24 @@ public class ElevatorSubsystem extends SubsystemBase {
                 || withinSafeAngleRange(targetAngle);
     }
 
-    public boolean atTarget() {
-        return false;
+    public boolean atTargetElevator() {
+        return Util.atTargetTolerance(getCurrentElevatorExtension(), 0.25);
+    }
+
+    public boolean atTargetAngle() {
+        return Util.atTargetTolerance(getCurrentWristAngle(), 2);
+    }
+
+    public boolean atTargetAll() {
+        return Util.atTargetTolerance(getCurrentElevatorExtension(), 0.25) && Util.atTargetTolerance(getCurrentWristAngle(), 2);
     }
 
     private void drivePeriodic() {
        elevatorOutput = elevatorController.calculate(getCurrentElevatorExtension(), determineTargetExtension());
 
-       elevatorMotor.set(MathUtils.clamp(elevatorOutput + Constants.Elevator.GRAVITY_OFFSET_PERCENT, -0.3, 0.3));
-       wristMotor.turnToAngle(targetAngle);
+       elevatorMotor.set(MathUtils.clamp(elevatorOutput + Constants.Elevator.GRAVITY_OFFSET_PERCENT, -0.5, 0.5));
+
+       wristMotor.turnToAngle(determineTargetAngle());
     }
 
     @Override

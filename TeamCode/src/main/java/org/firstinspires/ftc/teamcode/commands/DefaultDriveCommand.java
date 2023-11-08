@@ -9,7 +9,7 @@ import java.util.function.DoubleSupplier;
 
 public class DefaultDriveCommand extends CommandBase {
 
-    private DrivebaseSubsystem drivebaseSubsystem;
+    private final DrivebaseSubsystem drivebaseSubsystem;
 
     private DoubleSupplier leftY, leftX, rightX;
 

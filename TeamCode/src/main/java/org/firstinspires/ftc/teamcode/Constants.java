@@ -18,9 +18,19 @@ public final class Constants {
             //FIXME placeholder values
             public static final double MIN_EXTENSION_INCHES = 0;
             public static final double MAX_EXTENSION_INCHES = 28.75;
-            public static final double MID_HEIGHT_INCHES = 6;
-            public static final double HIGH_SETPOINT = 10;
+            public static final double MID_HEIGHT_INCHES = 12;
+            public static final double HIGH_SETPOINT = 20;
+            public static final double STOW_WRIST_EXTENSION = 8;
         }
+    }
+
+    public static final class Wrist {
+
+        public static final class Setpoints {
+            public static final double STOWED = 0;
+            public static final double SCORE = 30;
+        }
+
     }
 
     public static final class Intake {
