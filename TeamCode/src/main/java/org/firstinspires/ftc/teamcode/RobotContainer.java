@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gam
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -40,20 +41,21 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
-        brandon.getGamepadButton(GamepadKeys.Button.Y)
-                .whenPressed(new LinearSlideCommand(elevatorSubsystem, Constants.Elevator.Setpoints.HIGH_SETPOINT));
 
-        brandon.getGamepadButton(GamepadKeys.Button.B)
-                .whenPressed(new LinearSlideCommand(elevatorSubsystem, Constants.Elevator.Setpoints.MID_HEIGHT_INCHES));
+        new ButtonObject(brandon, GamepadKeys.Button.Y)
+                .whenActive(new LinearSlideCommand(elevatorSubsystem, Constants.Elevator.Setpoints.HIGH_SETPOINT));
 
-        brandon.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(new LinearSlideCommand(elevatorSubsystem, Constants.Elevator.Setpoints.MIN_EXTENSION_INCHES));
+        new ButtonObject(brandon, GamepadKeys.Button.B)
+                .whenActive(new LinearSlideCommand(elevatorSubsystem, Constants.Elevator.Setpoints.MID_HEIGHT_INCHES));
 
-        brandon.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .whenPressed(new WristRateCommand(elevatorSubsystem, 0));
+        new ButtonObject(brandon, GamepadKeys.Button.A)
+                .whenActive(new LinearSlideCommand(elevatorSubsystem, Constants.Elevator.Setpoints.MIN_EXTENSION_INCHES));
 
-        brandon.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenPressed(new WristRateCommand(elevatorSubsystem, 30));
+        new ButtonObject(brandon, GamepadKeys.Button.LEFT_BUMPER)
+                .whenActive(new WristRateCommand(elevatorSubsystem, 0));
+
+        new ButtonObject(brandon, GamepadKeys.Button.RIGHT_BUMPER)
+                .whenActive(new WristRateCommand(elevatorSubsystem, 30));
 
         new Trigger(() -> brandon.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.3)
                 .whenActive(new ForceIntakeModeCommand(intakeSubsystem, IntakeSubsystem.RunModes.INTAKE));
