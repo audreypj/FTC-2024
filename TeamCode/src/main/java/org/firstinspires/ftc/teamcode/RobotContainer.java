@@ -41,7 +41,7 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         brandon.getGamepadButton(GamepadKeys.Button.Y)
-                .whenPressed(new LinearSlideCommand(elevatorSubsystem, Constants.Elevator.Setpoints.MAX_EXTENSION_INCHES));
+                .whenPressed(new LinearSlideCommand(elevatorSubsystem, Constants.Elevator.Setpoints.HIGH_SETPOINT));
 
         brandon.getGamepadButton(GamepadKeys.Button.B)
                 .whenPressed(new LinearSlideCommand(elevatorSubsystem, Constants.Elevator.Setpoints.MID_HEIGHT_INCHES));

@@ -17,8 +17,9 @@ public final class Constants {
         public static final class Setpoints {
             //FIXME placeholder values
             public static final double MIN_EXTENSION_INCHES = 0;
-            public static final double MAX_EXTENSION_INCHES = 12;
+            public static final double MAX_EXTENSION_INCHES = 28.75;
             public static final double MID_HEIGHT_INCHES = 6;
+            public static final double HIGH_SETPOINT = 10;
         }
     }
 
