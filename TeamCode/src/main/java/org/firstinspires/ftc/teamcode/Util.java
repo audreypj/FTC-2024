@@ -5,4 +5,5 @@ public class Util {
     public static double normalizeDegrees(double degrees) {
         return (degrees % 360 + 360) % 360;
     }
+
 }

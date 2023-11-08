@@ -13,12 +13,12 @@ import com.arcrobotics.ftclib.hardware.GyroEx;
 import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
+import com.arcrobotics.ftclib.kinematics.wpilibkinematics.ChassisSpeeds;
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveKinematics;
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveOdometry;
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveWheelSpeeds;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.Util;
 
@@ -26,20 +26,17 @@ import java.util.function.DoubleSupplier;
 
 public class DrivebaseSubsystem extends SubsystemBase {
 
-    private HardwareMap hMap;
     private FtcDashboard dashboard = FtcDashboard.getInstance();
     private TelemetryPacket telemetryPacket = new TelemetryPacket();
 
-    private Motor fL,fR,bL,bR;
+    private MotorEx fL,fR,bL,bR;
     private GyroEx gyro;
 
     private MecanumDrive mecanum;
     private MecanumDriveKinematics kinematics;
     private MecanumDriveOdometry odometry;
     private Pose2d robotPose = new Pose2d();
-
-    //FIXME need to actually declare wheelspeeds. havent actually put any values, figure that out
-    private MecanumDriveWheelSpeeds wheelSpeeds;
+    private ChassisSpeeds chassisSpeeds = new ChassisSpeeds();
 
     private DoubleSupplier leftY, leftX, rightX;
 
@@ -47,21 +44,20 @@ public class DrivebaseSubsystem extends SubsystemBase {
     private Translation2d[] motorPositions = {new Translation2d(), new Translation2d(), new Translation2d(), new Translation2d()};
 
     public DrivebaseSubsystem(HardwareMap hMap) {
-        this.hMap = hMap;
 
-        fL = new MotorEx(hMap, "fL");
-        fR = new MotorEx(hMap, "fR");
-        bL = new MotorEx(hMap, "bL");
-        bR = new MotorEx(hMap, "bR");
+        fL = new MotorEx(hMap, "fL", Motor.GoBILDA.RPM_312);
+        fR = new MotorEx(hMap, "fR", Motor.GoBILDA.RPM_312);
+        bL = new MotorEx(hMap, "bL", Motor.GoBILDA.RPM_312);
+        bR = new MotorEx(hMap, "bR", Motor.GoBILDA.RPM_312);
 
         gyro = new RevIMU(hMap);
         gyro.init();
 
         mecanum = new MecanumDrive(true, fL, fR, bL, bR);
 
-        leftY = () -> {return 0;};
-        leftX = () -> {return 0;};
-        rightX = () -> {return 0;};
+        leftY = () -> 0;
+        leftX = () -> 0;
+        rightX = () -> 0;
 
         kinematics =
                 new MecanumDriveKinematics(
@@ -87,24 +83,52 @@ public class DrivebaseSubsystem extends SubsystemBase {
         return fL.getCurrentPosition();
     }
 
+    private MecanumDriveWheelSpeeds calculateWheelSpeeds() {
+        return new MecanumDriveWheelSpeeds(
+                wheelTickToMeter(fL.getCorrectedVelocity()),
+                wheelTickToMeter(fR.getCorrectedVelocity()),
+                wheelTickToMeter(bL.getCorrectedVelocity()),
+                wheelTickToMeter(bR.getCorrectedVelocity()));
+    }
+
+    private double wheelTickToMeter(double ticks) {
+        return ticks * ((0.096 * Math.PI) / 537.6);
+    }
+
     public Rotation2d getConsistentGyroAngle() {
         return Rotation2d.fromDegrees(Util.normalizeDegrees(gyro.getAbsoluteHeading()));
     }
 
-    public void driveMotors(DoubleSupplier leftY, DoubleSupplier leftX, DoubleSupplier rightX) {
+    public void driveRawJoystick(DoubleSupplier leftY, DoubleSupplier leftX, DoubleSupplier rightX) {
         this.leftY = leftY;
         this.leftX = leftX;
         this.rightX = rightX;
     }
 
+    public void drive(ChassisSpeeds chassisSpeeds) {
+        this.chassisSpeeds = chassisSpeeds;
+    }
+
     private void odometryPeriodic() {
-        this.robotPose = odometry.updateWithTime(Robot.currentTimestamp(), getConsistentGyroAngle(), wheelSpeeds);
+        this.robotPose = odometry.updateWithTime(Robot.currentTimestamp(), getConsistentGyroAngle(), calculateWheelSpeeds());
+    }
+
+    private void drivePeriodic() {
+        MecanumDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
+
+        mecanum.driveWithMotorPowers(
+                wheelSpeeds.frontLeftMetersPerSecond,
+                wheelSpeeds.frontRightMetersPerSecond,
+                wheelSpeeds.rearLeftMetersPerSecond,
+                wheelSpeeds.rearRightMetersPerSecond);
     }
 
     @Override
     public void periodic() {
-        mecanum.driveRobotCentric(leftY.getAsDouble(), leftX.getAsDouble(), rightX.getAsDouble());
 
+        drivePeriodic();
+
+        odometryPeriodic();
 
         if(SHOW_DEBUG_DATA) {
             dashboard.sendTelemetryPacket(telemetryPacket);
