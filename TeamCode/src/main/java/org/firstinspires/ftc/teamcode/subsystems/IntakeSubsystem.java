@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.hardware.motors.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -46,5 +48,10 @@ public class IntakeSubsystem extends SubsystemBase {
 
         applyMode();
 
+        if(Constants.Config.SHOW_DEBUG_DATA) {
+            packet.put("currentIntakeMode", currentRunMode);
+
+            dashboard.sendTelemetryPacket(packet);
+        }
     }
 }
