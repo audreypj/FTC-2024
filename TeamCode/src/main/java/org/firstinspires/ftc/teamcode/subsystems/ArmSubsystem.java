@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.controller.PIDFController;
@@ -16,6 +18,9 @@ public class ArmSubsystem extends SubsystemBase {
     public enum SlideModes {
         POSITION, CLIMB
     }
+
+    private final FtcDashboard dashboard = FtcDashboard.getInstance();
+    private TelemetryPacket packet;
 
     private final MotorEx armMotor, armMotorTwo, extensionMotor;
 
@@ -145,7 +150,10 @@ public class ArmSubsystem extends SubsystemBase {
     private double determineTargetExtension() {
         if(!currentOrTargetExtensionSafe()) {
             targetExtension = Constants.Slide.Setpoints.STOWED;
+        } else if(getCorrectedAnglePosition() < -10 || targetAngle < -10) {
+            targetExtension = Constants.Slide.Setpoints.STOWED;
         }
+
         return targetExtension;
     }
 
@@ -165,7 +173,17 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        posPeriodic();
+        applyMode();
+
+        if(Constants.Config.SHOW_DEBUG_DATA) {
+            packet.put("targetAngle", targetAngle);
+            packet.put("targetExtension", targetExtension);
+            packet.put("correctedAngle", getCorrectedAnglePosition());
+            packet.put("rawAngle", getRawAnglePosition());
+            packet.put("currentExtension", getCurrentExtension());
+
+            dashboard.sendTelemetryPacket(packet);
+        }
     }
 
     private void applyMode() {

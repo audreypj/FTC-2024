@@ -72,12 +72,8 @@ public class DrivebaseSubsystem extends SubsystemBase {
                         Rotation2d.fromDegrees(0),
                         //FIXME placeholder starting values. have to fix for actual comp
                         new Pose2d(1, 2, Rotation2d.fromDegrees(0)));
-
-        if(SHOW_DEBUG_DATA) {
-            //FIXME figure out how to use ftcdashboard telemetry later
-            //telemetryPacket.put("fL Pos", getMotorPos());
-        };
     }
+
     //FIXME just a debug method - just to check if motor encoder works
     private double getMotorPos() {
         return fL.getCurrentPosition();
@@ -125,13 +121,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-
         drivePeriodic();
-
         odometryPeriodic();
-
-        if(SHOW_DEBUG_DATA) {
-            dashboard.sendTelemetryPacket(telemetryPacket);
-        }
     }
 }

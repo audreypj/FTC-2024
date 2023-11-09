@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
+import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
+
 public final class Constants {
 
     public static final class Config {
         //enable when testing, just havent figured out implementing ftc dashboard yet
-        public static final boolean SHOW_DEBUG_DATA = false;
+        public static final boolean SHOW_DEBUG_DATA = true;
     }
 
     public static final class Arm {
@@ -25,7 +27,7 @@ public final class Constants {
         }
 
         public static final class ArmStates {
-
+            public static final ArmSubsystem.ArmState STOWED = new ArmSubsystem.ArmState(0, 0);
         }
     }
 
@@ -33,6 +35,19 @@ public final class Constants {
         public static final class Setpoints {
             public static final double STOWED = 0;
             public static final double MAXIMUM_EXTENSION = 20;
+        }
+    }
+
+    public static final class Shooter {
+        public static final class Powers {
+            public static final double OFF = 0;
+            public static final double LAUNCH = 0.5;
+            public static final double REVERSE = -0.5;
+        }
+
+        public static final class Timings {
+            public static final double LAUNCH_DURATION = 0.5;
+            public static final double REVERSE_DURATION = 0.5;
         }
     }
 }

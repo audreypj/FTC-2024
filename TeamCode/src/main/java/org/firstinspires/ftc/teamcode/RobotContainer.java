@@ -14,9 +14,12 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.commands.ArmCommand;
 import org.firstinspires.ftc.teamcode.commands.ArmRateCommand;
 import org.firstinspires.ftc.teamcode.commands.DefaultDriveCommand;
+import org.firstinspires.ftc.teamcode.commands.ForceIntakeModeCommand;
+import org.firstinspires.ftc.teamcode.commands.ShooterCommand;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DrivebaseSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 
 import java.util.Optional;
 
@@ -27,11 +30,13 @@ public class RobotContainer {
     private final DrivebaseSubsystem drivebaseSubsystem;
     private final ArmSubsystem armSubsystem;
     private final IntakeSubsystem intakeSubsystem;
+    private final ShooterSubsystem shooterSubsystem;
 
     public RobotContainer(HardwareMap hardwareMap, Optional<Gamepad> gamepad1, Optional<Gamepad> gamepad2) {
         drivebaseSubsystem  = new DrivebaseSubsystem(hardwareMap);
         armSubsystem = new ArmSubsystem(hardwareMap);
         intakeSubsystem = new IntakeSubsystem(hardwareMap);
+        shooterSubsystem = new ShooterSubsystem(hardwareMap);
 
         CommandScheduler.getInstance().registerSubsystem(drivebaseSubsystem);
         CommandScheduler.getInstance().registerSubsystem(intakeSubsystem);
@@ -70,5 +75,19 @@ public class RobotContainer {
         new ButtonObject(danny, GamepadKeys.Button.Y)
                 .whenActive(new ArmCommand(armSubsystem, Constants.Arm.Setpoints.MAXIMUM_ANGLE));
 
+        new ButtonObject(danny, GamepadKeys.Button.A)
+                .whenActive(new ArmCommand(armSubsystem, Constants.Arm.Setpoints.STOWED));
+
+        new ButtonObject(danny, GamepadKeys.Button.X)
+                .whenActive(new ArmCommand(armSubsystem, Constants.Arm.ArmStates.STOWED));
+
+        new Trigger(() -> danny.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.3)
+                .whileActiveContinuous(new ForceIntakeModeCommand(intakeSubsystem, IntakeSubsystem.Modes.INTAKE));
+
+        new Trigger(() -> danny.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.3)
+                .whileActiveContinuous(new ForceIntakeModeCommand(intakeSubsystem, IntakeSubsystem.Modes.OUTTAKE));
+
+        new ButtonObject(danny, GamepadKeys.Button.DPAD_UP)
+                .whenActive(new ShooterCommand(shooterSubsystem, ShooterSubsystem.Modes.LAUNCH));
     }
 }
