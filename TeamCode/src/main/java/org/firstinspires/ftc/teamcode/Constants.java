@@ -20,7 +20,7 @@ public final class Constants {
             //FIXME very important fix pls
             public static final double PARALLEL = 0;
             public static final double BARE_MIN = -30;
-            public static final double MAXIMUM_ANGLE = 90;
+            public static final double MAXIMUM_ANGLE = 50;
             public static final double STOWED = -10;
         }
 

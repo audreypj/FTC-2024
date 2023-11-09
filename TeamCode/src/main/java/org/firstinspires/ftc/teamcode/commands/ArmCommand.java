@@ -15,6 +15,10 @@ public class ArmCommand extends CommandBase {
         addRequirements(this.armSubsystem);
     }
 
+    public ArmCommand(ArmSubsystem armSubsystem, double angle) {
+        this(armSubsystem, new ArmSubsystem.ArmState(angle));
+    }
+
     @Override
     public void initialize() {
         armSubsystem.setArmState(armState);

@@ -26,7 +26,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     private SlideModes currentSlideMode;
 
-    public class ArmState {
+    public static class ArmState {
         public double angle, extension;
         public ArmState(Optional<Double> angle, Optional<Double> extension) {
             this.angle = angle.orElse((double) Constants.Arm.Setpoints.STOWED);
