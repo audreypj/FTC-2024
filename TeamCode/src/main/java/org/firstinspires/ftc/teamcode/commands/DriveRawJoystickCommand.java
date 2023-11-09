@@ -8,26 +8,21 @@ import java.util.function.DoubleSupplier;
 
 @Deprecated
 public class DriveRawJoystickCommand extends CommandBase {
-
     private DrivebaseSubsystem drivebaseSubsystem;
-
     private DoubleSupplier leftY, leftX, rightX;
 
     public DriveRawJoystickCommand(DrivebaseSubsystem drivebaseSubsystem, DoubleSupplier leftY, DoubleSupplier leftX, DoubleSupplier rightX) {
         this.drivebaseSubsystem = drivebaseSubsystem;
-
         this.leftY = leftY;
         this.leftX = leftX;
         this.rightX = rightX;
-
-        drivebaseSubsystem.driveRawJoystick(leftY, leftX, rightX);
 
         addRequirements(drivebaseSubsystem);
     }
 
     @Override
     public void execute() {
-        //drivebaseSubsystem.driveMotors(leftY, leftX, rightX);
+        drivebaseSubsystem.driveRawJoystick(leftY, leftX, rightX);
     }
 
     @Override

@@ -8,9 +8,7 @@ import org.firstinspires.ftc.teamcode.subsystems.DrivebaseSubsystem;
 import java.util.function.DoubleSupplier;
 
 public class DefaultDriveCommand extends CommandBase {
-
     private DrivebaseSubsystem drivebaseSubsystem;
-
     private DoubleSupplier leftY, leftX, rightX;
 
     public DefaultDriveCommand(DrivebaseSubsystem drivebaseSubsystem, DoubleSupplier leftY, DoubleSupplier leftX, DoubleSupplier rightX) {
@@ -40,5 +38,4 @@ public class DefaultDriveCommand extends CommandBase {
     public void end(boolean interrupted) {
         drivebaseSubsystem.drive(new ChassisSpeeds());
     }
-
 }

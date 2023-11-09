@@ -24,7 +24,15 @@ public final class Constants {
             public static final double STOWED = -10;
         }
 
+        public static final class ArmStates {
 
+        }
+    }
 
+    public static final class Slide {
+        public static final class Setpoints {
+            public static final double STOWED = 0;
+            public static final double MAXIMUM_EXTENSION = 20;
+        }
     }
 }

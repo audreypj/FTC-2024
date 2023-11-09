@@ -11,6 +11,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.commands.ArmRateCommand;
 import org.firstinspires.ftc.teamcode.commands.DefaultDriveCommand;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DrivebaseSubsystem;
@@ -19,7 +20,6 @@ import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import java.util.Optional;
 
 public class RobotContainer {
-
     private GamepadEx brandon, danny;
     private Gamepad gamepad1, gamepad2;
 
@@ -49,6 +49,13 @@ public class RobotContainer {
                             brandon::getLeftX,
                             brandon::getRightX));
 
+            CommandScheduler.getInstance().setDefaultCommand(
+                    armSubsystem,
+                    new ArmRateCommand(
+                            armSubsystem,
+                            danny::getLeftY,
+                            danny::getRightY));
+
             configureButtonBindings();
         }
     }
@@ -59,6 +66,7 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
 
-    }
+        
 
+    }
 }
