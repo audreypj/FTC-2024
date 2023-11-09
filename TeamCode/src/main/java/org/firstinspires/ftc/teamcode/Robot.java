@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
 
+import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.util.Timing;
@@ -19,18 +20,13 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
     private RobotContainer robotContainer;
     private static Timing.Timer timer;
 
-    private CommandBase autonomousCommand;
+    private Command autonomousCommand;
 
-    public Robot(OpModeType opModeType, HardwareMap hardwareMap, Optional<Gamepad> gamepad1, Optional<Gamepad> gamepad2) {
+    public Robot(OpModeType opModeType, HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2) {
 
-        if(gamepad1.isPresent()) {
-            robotContainer = new RobotContainer(hardwareMap, gamepad1, gamepad2);
-        } else {
-            robotContainer = new RobotContainer(hardwareMap);
-        }
+        robotContainer = new RobotContainer(hardwareMap, gamepad1, gamepad2);
 
-
-        timer = new Timing.Timer(600);
+        timer = new Timing.Timer(600); //placeholder length
 
         //check if opmode is auto or tele and init accordingly
         if(opModeType == OpModeType.TELEOP) {
@@ -40,26 +36,27 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
         }
     }
 
-    public Robot(OpModeType opModeType, HardwareMap hardwareMap) {
-        this(opModeType, hardwareMap, Optional.empty(), Optional.empty());
-    }
-
     private void initTele() {
-
         if(autonomousCommand != null) {
-
+            autonomousCommand.cancel();
         } else {
             timer.start();
         }
-
     }
 
     private void initAuto() {
         timer.start();
+        if(autonomousCommand != null) {
+            autonomousCommand.schedule();
+        }
     }
 
     public static double currentTimestamp() {
         return timer.elapsedTime();
+    }
+
+    public void setAutonomousCommand(RobotContainer.AutonomousSelection autonomousSelection) {
+        this.autonomousCommand = robotContainer.getAutonomousCommand(autonomousSelection);
     }
 
 }

@@ -21,11 +21,16 @@ public class LinearSlideRateCommand extends CommandBase {
 
     @Override
     public void execute() {
-        elevatorSubsystem.setElevatorTargetInches(elevatorSubsystem.getWristTargetAngle() + (rate.getAsDouble() * 0.5));
+        elevatorSubsystem.setElevatorTargetInches(elevatorSubsystem.getCurrentElevatorExtension() + (rate.getAsDouble() * 0.3));
     }
 
     @Override
     public void end(boolean interrupted) {
 
+    }
+
+    @Override
+    public boolean isFinished() {
+        return false;
     }
 }

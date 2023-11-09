@@ -29,13 +29,12 @@ public final class Constants {
         public static final class Setpoints {
             public static final double STOWED = 0;
             public static final double SCORE = 30;
+            public static final double MAXIMUM = 60;
         }
 
     }
 
     public static final class Intake {
-
-
         public static final class ModePowers {
             //FIXME placeholder values
             public static final double OFF = 0;

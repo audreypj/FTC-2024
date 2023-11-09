@@ -78,8 +78,8 @@ public class ElevatorSubsystem extends SubsystemBase {
         this.targetAngle =
                 MathUtils.clamp(
                         angle,
-                        0,
-                        180);
+                        Constants.Wrist.Setpoints.STOWED,
+                        Constants.Wrist.Setpoints.MAXIMUM);
     }
 
     public double getWristTargetAngle() {
@@ -95,7 +95,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         return targetAngle;
     }
 
-    private double getCurrentElevatorExtension() {
+    public double getCurrentElevatorExtension() {
         return ticksToInchesExtension(elevatorMotor.getCurrentPosition());
     }
 
@@ -118,8 +118,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     //FIXME actual safe range
     private boolean withinSafeAngleRange(double angle) {
-        return angle > 0
-                || angle < 180;
+        return angle > Constants.Wrist.Setpoints.STOWED
+                || angle < Constants.Wrist.Setpoints.MAXIMUM;
     }
 
     private boolean currentOrTargetAngleIsSafe() {

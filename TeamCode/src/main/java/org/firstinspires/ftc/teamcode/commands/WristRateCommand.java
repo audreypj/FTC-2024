@@ -26,4 +26,9 @@ public class WristRateCommand extends CommandBase {
     public void end(boolean interrupted) {
 
     }
+
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 }
