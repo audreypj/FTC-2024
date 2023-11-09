@@ -25,6 +25,8 @@ public class ElevatorCommand extends CommandBase {
         this.elevatorSubsystem = elevatorSubsystem;
         this.extension = extension;
         this.angle = angle;
+
+        addRequirements(elevatorSubsystem);
     }
 
     public ElevatorCommand(ElevatorSubsystem elevatorSubsystem, ScoreState scoreState) {
