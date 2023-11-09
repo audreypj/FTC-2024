@@ -14,7 +14,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     private HardwareMap hMap;
 
-    private MotorEx armMotor, armMotorTwo;
+    private MotorEx armMotor, armMotorTwo, extensionMotor;
 
     private final PIDController armController, extensionController;
 
@@ -37,6 +37,7 @@ public class ArmSubsystem extends SubsystemBase {
 
         armMotor = new MotorEx(hMap, "armMotor", Motor.GoBILDA.RPM_60);
         armMotorTwo = new MotorEx(hMap, "armMotorTwo", Motor.GoBILDA.RPM_60);
+        extensionMotor = new MotorEx(hMap, "slideMotor", Motor.GoBILDA.RPM_312); //FIXME check correct rpm
 
         armMotor.resetEncoder();
         armMotorTwo.resetEncoder();
@@ -53,6 +54,10 @@ public class ArmSubsystem extends SubsystemBase {
 
     }
 
+    private double ticksToInchesExtension(double ticks) {
+        return ((38.2 * Math.PI) * ticks) / extensionMotor.getCPR();
+    }
+
     private double tickToDegrees(double ticks) {
         //FIXME make sure math works
         return ((ticks / 2786) * Constants.Arm.ARM_GEAR_RATIO) * 360;
@@ -67,6 +72,10 @@ public class ArmSubsystem extends SubsystemBase {
     //make parallel to ground 0 degrees using offset
     public double getCorrectedAnglePosition() {
         return getRawAnglePosition() + Constants.Arm.ARM_ANGLE_OFFSET;
+    }
+
+    public double getCurrentExtension() {
+        return ticksToInchesExtension(extensionMotor.getCurrentPosition());
     }
 
     private double calculateGravityOffset() {

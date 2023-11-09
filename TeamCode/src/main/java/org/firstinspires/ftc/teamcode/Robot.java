@@ -47,7 +47,7 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
     private void initTele() {
 
         if(autonomousCommand != null) {
-
+            super.reset();
         } else {
             timer.start();
         }
