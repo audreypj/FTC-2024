@@ -16,9 +16,10 @@ public class ArmSubsystem extends SubsystemBase {
 
     private MotorEx armMotor, armMotorTwo;
 
-    private PIDController armController;
+    private final PIDController armController, extensionController;
 
     private double targetAngle;
+    private double targetExtension;
 
     public class ArmState {
         public double angle, extension;
@@ -43,9 +44,12 @@ public class ArmSubsystem extends SubsystemBase {
         armMotorTwo.setInverted(true);
 
         armController = new PIDController(0.003, 0.001, 0.001);
+        extensionController = new PIDController(0.003, 0, 0.001);
         armController.setTolerance(3);
+        extensionController.setTolerance(0.1);
 
         targetAngle = 0;
+        targetExtension = 0;
 
     }
 
@@ -55,8 +59,7 @@ public class ArmSubsystem extends SubsystemBase {
         //currentPos/total circumference = degrees/360
         //currentPos = (tickPos / cpr) * gear ratio * totalCircumferece
     }
-
-
+    
     private double getRawAnglePosition() {
         return tickToDegrees(armMotor.getCurrentPosition());
     }
@@ -98,6 +101,6 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-
+        drivePeriodic();
     }
 }
