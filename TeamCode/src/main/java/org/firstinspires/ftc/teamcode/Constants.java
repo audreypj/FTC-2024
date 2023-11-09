@@ -46,7 +46,16 @@ public final class Constants {
     }
 
     public static final class Shooter {
+        public static final class Powers {
+            public static final double OFF = 0;
+            public static final double LAUNCH = 0.5;
+            public static final double REVERSE = -0.5;
+        }
 
+        public static final class Timings {
+            public static final double LAUNCH_DURATION = 0.5;
+            public static final double REVERSE_DURATION = 0.5;
+        }
     }
 
 }

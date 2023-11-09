@@ -15,11 +15,13 @@ import org.firstinspires.ftc.teamcode.commands.DefaultDriveCommand;
 import org.firstinspires.ftc.teamcode.commands.LinearSlideCommand;
 import org.firstinspires.ftc.teamcode.commands.ForceIntakeModeCommand;
 import org.firstinspires.ftc.teamcode.commands.LinearSlideRateCommand;
+import org.firstinspires.ftc.teamcode.commands.ShooterCommand;
 import org.firstinspires.ftc.teamcode.commands.WristCommand;
 import org.firstinspires.ftc.teamcode.commands.WristRateCommand;
 import org.firstinspires.ftc.teamcode.subsystems.DrivebaseSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ElevatorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 
 import java.util.Optional;
 
@@ -31,11 +33,13 @@ public class RobotContainer {
     private final DrivebaseSubsystem drivebaseSubsystem;
     private final ElevatorSubsystem elevatorSubsystem;
     private final IntakeSubsystem intakeSubsystem;
+    private final ShooterSubsystem shooterSubsystem;
 
     public RobotContainer(HardwareMap hardwareMap, Optional<Gamepad> gamepad1, Optional<Gamepad> gamepad2) {
         drivebaseSubsystem  = new DrivebaseSubsystem(hardwareMap);
         elevatorSubsystem = new ElevatorSubsystem(hardwareMap);
         intakeSubsystem = new IntakeSubsystem(hardwareMap);
+        shooterSubsystem = new ShooterSubsystem(hardwareMap);
 
         CommandScheduler.getInstance().registerSubsystem(drivebaseSubsystem);
         CommandScheduler.getInstance().registerSubsystem(elevatorSubsystem);
@@ -92,6 +96,7 @@ public class RobotContainer {
         new Trigger(() -> danny.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.3)
                 .whenActive(new ForceIntakeModeCommand(intakeSubsystem, IntakeSubsystem.RunModes.OUTTAKE));
 
+        new ButtonObject(danny, GamepadKeys.Button.DPAD_UP)
+                .whenActive(new ShooterCommand(shooterSubsystem, ShooterSubsystem.Modes.LAUNCH));
     }
-
 }
