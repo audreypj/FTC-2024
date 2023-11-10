@@ -15,7 +15,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     private final FtcDashboard dashboard = FtcDashboard.getInstance();
-    private TelemetryPacket packet;
+    private final TelemetryPacket packet = new TelemetryPacket();
 
     private CRServo intakeServo;
 
