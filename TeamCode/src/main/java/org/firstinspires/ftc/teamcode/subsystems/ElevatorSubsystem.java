@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.Util;
 public class ElevatorSubsystem extends SubsystemBase {
 
     private final FtcDashboard dashboard = FtcDashboard.getInstance();
-    private TelemetryPacket packet;
+    private final TelemetryPacket packet = new TelemetryPacket();
 
     private final MotorEx elevatorMotor;
     private final SimpleServo wristMotor;

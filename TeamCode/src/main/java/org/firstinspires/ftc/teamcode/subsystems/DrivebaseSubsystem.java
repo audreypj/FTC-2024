@@ -27,7 +27,7 @@ import java.util.function.DoubleSupplier;
 public class DrivebaseSubsystem extends SubsystemBase {
 
     private FtcDashboard dashboard = FtcDashboard.getInstance();
-    private TelemetryPacket telemetryPacket = new TelemetryPacket();
+    private final TelemetryPacket packet = new TelemetryPacket();
 
     private MotorEx fL,fR,bL,bR;
     private GyroEx gyro;

@@ -19,7 +19,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     private FtcDashboard dashboard = FtcDashboard.getInstance();
-    private TelemetryPacket packet;
+    private final TelemetryPacket packet = new TelemetryPacket();
 
     private MotorEx intakeMotor;
 
