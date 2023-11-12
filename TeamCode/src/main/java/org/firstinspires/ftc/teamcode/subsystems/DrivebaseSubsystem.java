@@ -41,7 +41,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
     private DoubleSupplier leftY, leftX, rightX;
 
     //FIXME placeholders. put actual positions once get finalized robot
-    private Translation2d[] motorPositions = {new Translation2d(), new Translation2d(), new Translation2d(), new Translation2d()};
+    private final Translation2d[] motorPositions = {new Translation2d(0.17, 0.195), new Translation2d(0.17,-0.195), new Translation2d(-0.115, 0.195), new Translation2d(-0.115, -0.195)};
 
     public DrivebaseSubsystem(HardwareMap hMap) {
 
