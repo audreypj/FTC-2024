@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.autonomous.commands.AutoTest;
 import org.firstinspires.ftc.teamcode.commands.DefaultDriveCommand;
+import org.firstinspires.ftc.teamcode.commands.DriveRawJoystickCommand;
 import org.firstinspires.ftc.teamcode.commands.ElevatorRateCommand;
 import org.firstinspires.ftc.teamcode.commands.LinearSlideCommand;
 import org.firstinspires.ftc.teamcode.commands.ForceIntakeModeCommand;
@@ -52,15 +53,24 @@ public class RobotContainer {
         CommandScheduler.getInstance().registerSubsystem(drivebaseSubsystem);
         CommandScheduler.getInstance().registerSubsystem(elevatorSubsystem);
         CommandScheduler.getInstance().registerSubsystem(intakeSubsystem);
+        CommandScheduler.getInstance().registerSubsystem(shooterSubsystem);
 
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
         brandon = new GamepadEx(this.gamepad1);
         danny = new GamepadEx(this.gamepad2);
 
+//        CommandScheduler.getInstance().setDefaultCommand(
+//                drivebaseSubsystem,
+//                new DefaultDriveCommand(
+//                        drivebaseSubsystem,
+//                        brandon::getLeftY,
+//                        brandon::getLeftX,
+//                        brandon::getRightX));
+
         CommandScheduler.getInstance().setDefaultCommand(
                 drivebaseSubsystem,
-                new DefaultDriveCommand(
+                new DriveRawJoystickCommand(
                         drivebaseSubsystem,
                         brandon::getLeftY,
                         brandon::getLeftX,
