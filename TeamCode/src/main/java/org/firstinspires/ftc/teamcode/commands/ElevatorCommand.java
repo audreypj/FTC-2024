@@ -47,7 +47,6 @@ public class ElevatorCommand extends CommandBase {
     @Override
     public void initialize() {
         elevatorSubsystem.setElevatorTargetInches(extension);
-        elevatorSubsystem.setWristTargetAngle(angle);
     }
 
     @Override
@@ -57,7 +56,7 @@ public class ElevatorCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return elevatorSubsystem.atTargetAll();
+        return elevatorSubsystem.atTargetElevator();
     }
 
 }

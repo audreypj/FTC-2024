@@ -19,7 +19,6 @@ public class WristRateCommand extends CommandBase {
 
     @Override
     public void execute() {
-        elevatorSubsystem.setWristTargetAngle(elevatorSubsystem.getWristTargetAngle() + angle);
     }
 
     @Override

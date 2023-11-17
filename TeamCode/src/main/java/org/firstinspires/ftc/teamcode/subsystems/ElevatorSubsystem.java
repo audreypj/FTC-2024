@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
+import com.arcrobotics.ftclib.hardware.motors.CRServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.arcrobotics.ftclib.util.MathUtils;
@@ -14,13 +15,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Util;
 
+import java.util.function.DoubleSupplier;
+
 public class ElevatorSubsystem extends SubsystemBase {
 
     private final FtcDashboard dashboard = FtcDashboard.getInstance();
     private final TelemetryPacket packet = new TelemetryPacket();
 
     private final MotorEx elevatorMotor;
-    private final SimpleServo wristMotor;
+    private final CRServo wristMotor;
     private final PIDController elevatorController;
     private final PIDController wristController;
 
@@ -29,11 +32,13 @@ public class ElevatorSubsystem extends SubsystemBase {
     private double targetExtension = 0;
     private double targetAngle = 0;
 
+    private DoubleSupplier wristControlJoystick;
+
     public ElevatorSubsystem(HardwareMap hMap) {
 
         //FIXME check if the motor has to be inverted
         elevatorMotor = new MotorEx(hMap, "eleMotor", Motor.GoBILDA.RPM_312);
-        wristMotor = new SimpleServo(hMap, "wristMotor", 0, 360, AngleUnit.DEGREES);
+        wristMotor = new CRServo(hMap, "wristMotor");
 
         elevatorMotor.setRunMode(Motor.RunMode.RawPower);
 
@@ -42,12 +47,18 @@ public class ElevatorSubsystem extends SubsystemBase {
         elevatorMotor.resetEncoder();
 
         //FIXME tune pid
-        elevatorController = new PIDController(0.2, 0, 0.05);
+        elevatorController = new PIDController(0.5, 0, 0);
         wristController = new PIDController(0.2, 0, 0);
 
         elevatorController.setTolerance(0.1);
 
+        wristControlJoystick = () -> 0;
+
         //set up ftc dashboard so i can test how the motor encoder/position works
+    }
+
+    public void setWristControl(DoubleSupplier x) {
+        wristControlJoystick = x;
     }
 
     private void setZero() {
@@ -55,7 +66,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     private double getCurrentWristAngle() {
-        return wristMotor.getAngle();
+        return 0;
     }
 
     //check if works
@@ -75,27 +86,6 @@ public class ElevatorSubsystem extends SubsystemBase {
                         Constants.Elevator.Setpoints.MAX_EXTENSION_INCHES);
     }
 
-    //FIXME proper range
-    public void setWristTargetAngle(double angle) {
-        this.targetAngle =
-                MathUtils.clamp(
-                        angle,
-                        Constants.Wrist.Setpoints.STOWED,
-                        Constants.Wrist.Setpoints.MAXIMUM);
-    }
-
-    public double getWristTargetAngle() {
-        return targetAngle;
-    }
-
-    private double determineTargetAngle() {
-        if(!currentOrTargetAngleIsSafe()) {
-            targetAngle = Constants.Wrist.Setpoints.STOWED;
-        } else if((getCurrentElevatorExtension() < Constants.Elevator.Setpoints.STOW_WRIST_EXTENSION || targetExtension < Constants.Elevator.Setpoints.STOW_WRIST_EXTENSION)) {
-            targetAngle = Constants.Wrist.Setpoints.STOWED;
-        }
-        return targetAngle;
-    }
 
     public double getCurrentElevatorExtension() {
         return ticksToInchesExtension(elevatorMotor.getCurrentPosition());
@@ -118,16 +108,7 @@ public class ElevatorSubsystem extends SubsystemBase {
                || position < Constants.Elevator.Setpoints.MAX_EXTENSION_INCHES;
     }
 
-    //FIXME actual safe range
-    private boolean withinSafeAngleRange(double angle) {
-        return angle > Constants.Wrist.Setpoints.STOWED
-                || angle < Constants.Wrist.Setpoints.MAXIMUM;
-    }
 
-    private boolean currentOrTargetAngleIsSafe() {
-        return withinSafeAngleRange(getCurrentWristAngle())
-                || withinSafeAngleRange(targetAngle);
-    }
 
     public boolean atTargetElevator() {
         return Util.atTargetTolerance(getCurrentElevatorExtension(), targetExtension, 0.5);
@@ -143,10 +124,11 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     private void drivePeriodic() {
        elevatorOutput = MathUtils.clamp(elevatorController.calculate(getCurrentElevatorExtension(), determineTargetExtension()), -0.8, 0.8);
-       wristOutput = wristController.calculate(getCurrentWristAngle(), determineTargetAngle());
+       //wristOutput = wristController.calculate(getCurrentWristAngle(), determineTargetAngle());
 
        elevatorMotor.set(elevatorOutput + Constants.Elevator.GRAVITY_OFFSET_PERCENT);
-       wristMotor.rotateByAngle(wristOutput);
+       //wristMotor.rotateByAngle(wristOutput);
+        wristMotor.set(wristControlJoystick.getAsDouble());
     }
 
     @Override
