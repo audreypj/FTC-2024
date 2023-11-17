@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
+import org.firstinspires.ftc.teamcode.Util;
 import org.firstinspires.ftc.teamcode.subsystems.ElevatorSubsystem;
 
 public class LinearSlideCommand extends CommandBase {
@@ -29,6 +30,6 @@ public class LinearSlideCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return elevatorSubsystem.atTargetElevator();
+        return Util.atTargetTolerance(elevatorSubsystem.getCurrentElevatorExtension(), targetHeight, 0.1);
     }
 }

@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.autonomous.commands.AutoTest;
 import org.firstinspires.ftc.teamcode.commands.DefaultDriveCommand;
 import org.firstinspires.ftc.teamcode.commands.DriveRawJoystickCommand;
+import org.firstinspires.ftc.teamcode.commands.ElevatorCommand;
 import org.firstinspires.ftc.teamcode.commands.ElevatorRateCommand;
 import org.firstinspires.ftc.teamcode.commands.LinearSlideCommand;
 import org.firstinspires.ftc.teamcode.commands.ForceIntakeModeCommand;
@@ -60,17 +61,9 @@ public class RobotContainer {
         brandon = new GamepadEx(this.gamepad1);
         danny = new GamepadEx(this.gamepad2);
 
-//        CommandScheduler.getInstance().setDefaultCommand(
-//                drivebaseSubsystem,
-//                new DefaultDriveCommand(
-//                        drivebaseSubsystem,
-//                        brandon::getLeftY,
-//                        brandon::getLeftX,
-//                        brandon::getRightX));
-
         CommandScheduler.getInstance().setDefaultCommand(
                 drivebaseSubsystem,
-                new DriveRawJoystickCommand(
+                new DefaultDriveCommand(
                         drivebaseSubsystem,
                         brandon::getLeftY,
                         brandon::getLeftX,
@@ -88,20 +81,35 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
 
+//        new ButtonObject(danny, GamepadKeys.Button.Y)
+//                .whenActive(new LinearSlideCommand(elevatorSubsystem, Constants.Elevator.Setpoints.MIN_EXTENSION_INCHES));
+//
+//        new ButtonObject(danny, GamepadKeys.Button.B)
+//                .whenActive(new LinearSlideCommand(elevatorSubsystem, Constants.Elevator.Setpoints.MID_HEIGHT_INCHES));
+//
+//        new ButtonObject(danny, GamepadKeys.Button.A)
+//                .whenActive(new LinearSlideCommand(elevatorSubsystem, Constants.Elevator.Setpoints.MIN_EXTENSION_INCHES));
+
         new ButtonObject(danny, GamepadKeys.Button.Y)
-                .whenActive(new LinearSlideCommand(elevatorSubsystem, Constants.Elevator.Setpoints.HIGH_SETPOINT));
+                .whenActive(new ElevatorCommand(elevatorSubsystem, Constants.Elevator.ScoreStates.CLIMB));
 
         new ButtonObject(danny, GamepadKeys.Button.B)
-                .whenActive(new LinearSlideCommand(elevatorSubsystem, Constants.Elevator.Setpoints.MID_HEIGHT_INCHES));
+                .whenActive(new ElevatorCommand(elevatorSubsystem, Constants.Elevator.ScoreStates.SCORE));
 
         new ButtonObject(danny, GamepadKeys.Button.A)
-                .whenActive(new LinearSlideCommand(elevatorSubsystem, Constants.Elevator.Setpoints.MIN_EXTENSION_INCHES));
+                .whenActive(new ElevatorCommand(elevatorSubsystem, Constants.Elevator.ScoreStates.STOWED));
 
         new ButtonObject(danny, GamepadKeys.Button.LEFT_BUMPER)
                 .whenActive(new WristCommand(elevatorSubsystem, Constants.Wrist.Setpoints.STOWED));
 
         new ButtonObject(danny, GamepadKeys.Button.RIGHT_BUMPER)
                 .whenActive(new WristCommand(elevatorSubsystem, Constants.Wrist.Setpoints.SCORE));
+
+        new ButtonObject(brandon, GamepadKeys.Button.LEFT_BUMPER)
+                .whenActive(new ForceIntakeModeCommand(intakeSubsystem, IntakeSubsystem.RunModes.INTAKE));
+
+        new ButtonObject(brandon, GamepadKeys.Button.RIGHT_BUMPER)
+                .whenActive(new ForceIntakeModeCommand(intakeSubsystem, IntakeSubsystem.RunModes.OUTTAKE));
 
         new Trigger(() -> danny.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.3)
                 .whenActive(new ForceIntakeModeCommand(intakeSubsystem, IntakeSubsystem.RunModes.INTAKE));

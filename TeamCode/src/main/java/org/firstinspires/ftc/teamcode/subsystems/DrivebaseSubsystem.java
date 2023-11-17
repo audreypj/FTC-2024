@@ -19,6 +19,7 @@ import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveOdometry;
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveWheelSpeeds;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.Util;
 
@@ -30,7 +31,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
     private final TelemetryPacket packet = new TelemetryPacket();
 
     private MotorEx fL,fR,bL,bR;
-    private GyroEx gyro;
+    private RevIMU gyro;
 
     private MecanumDrive mecanum;
     private MecanumDriveKinematics kinematics;
@@ -91,7 +92,11 @@ public class DrivebaseSubsystem extends SubsystemBase {
     }
 
     public Rotation2d getConsistentGyroAngle() {
-        return Rotation2d.fromDegrees(Util.normalizeDegrees(gyro.getAbsoluteHeading()));
+        return Rotation2d.fromDegrees(Util.normalizeDegrees(-gyro.getAngles()[1])); //FIXME make sure this is correct angle b/c engie flipped hub
+    }
+
+    public void zeroGyroscope() {
+        gyro.reset();
     }
 
     public void driveRawJoystick(DoubleSupplier leftY, DoubleSupplier leftX, DoubleSupplier rightX) {
@@ -122,5 +127,11 @@ public class DrivebaseSubsystem extends SubsystemBase {
     public void periodic() {
         drivePeriodic();
         odometryPeriodic();
+
+        if(SHOW_DEBUG_DATA) {
+            packet.put("gyro angle", getConsistentGyroAngle());
+
+            dashboard.sendTelemetryPacket(packet);
+        }
     }
 }

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import org.firstinspires.ftc.teamcode.commands.ElevatorCommand;
+
 public final class Constants {
 
     public static final class Config {
@@ -17,10 +19,18 @@ public final class Constants {
         public static final class Setpoints {
             //FIXME placeholder values
             public static final double MIN_EXTENSION_INCHES = 0;
-            public static final double MAX_EXTENSION_INCHES = 28.75;
+            public static final double MAX_EXTENSION_INCHES = 28; //slightly less than max for safety
             public static final double MID_HEIGHT_INCHES = 12;
             public static final double HIGH_SETPOINT = 20;
             public static final double STOW_WRIST_EXTENSION = 8;
+            public static final double STOWED = 0;
+            public static final double SCORE = 16;
+        }
+
+        public static final class ScoreStates {
+            public static final ElevatorCommand.ScoreState STOWED = new ElevatorCommand.ScoreState(Elevator.Setpoints.STOWED, Wrist.Setpoints.STOWED);
+            public static final ElevatorCommand.ScoreState SCORE = new ElevatorCommand.ScoreState(Elevator.Setpoints.SCORE, Wrist.Setpoints.SCORE);
+            public static final ElevatorCommand.ScoreState CLIMB = new ElevatorCommand.ScoreState(Elevator.Setpoints.MAX_EXTENSION_INCHES);
         }
     }
 

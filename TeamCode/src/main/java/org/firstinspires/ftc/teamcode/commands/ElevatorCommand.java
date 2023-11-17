@@ -2,22 +2,33 @@ package org.firstinspires.ftc.teamcode.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.ElevatorSubsystem;
 
 import java.util.Optional;
 
 public class ElevatorCommand extends CommandBase {
 
-    public class ScoreState {
+    public static class ScoreState {
         public double extension, angle;
 
         public ScoreState(Optional<Double> extension, Optional<Double> angle) {
+            this.extension = extension.orElse(Constants.Elevator.Setpoints.MIN_EXTENSION_INCHES);
+            this.angle = angle.orElse(Constants.Wrist.Setpoints.STOWED);
             if(extension.isPresent()) { this.extension = extension.get(); }
             if(angle.isPresent()) { this.angle = angle.get(); }
         }
+
+        public ScoreState(double extension, double angle) {
+            this(Optional.of(extension), Optional.of(angle));
+        }
+
+        public ScoreState(double extension) {
+            this(Optional.of(extension), Optional.empty());
+        }
     }
 
-    private ElevatorSubsystem elevatorSubsystem;
+    private final ElevatorSubsystem elevatorSubsystem;
 
     private double extension, angle;
 

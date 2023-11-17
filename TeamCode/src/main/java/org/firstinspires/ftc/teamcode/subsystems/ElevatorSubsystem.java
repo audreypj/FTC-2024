@@ -22,8 +22,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     private final MotorEx elevatorMotor;
     private final SimpleServo wristMotor;
     private final PIDController elevatorController;
+    private final PIDController wristController;
 
     private double elevatorOutput = 0;
+    private double wristOutput = 0;
     private double targetExtension = 0;
     private double targetAngle = 0;
 
@@ -33,14 +35,15 @@ public class ElevatorSubsystem extends SubsystemBase {
         elevatorMotor = new MotorEx(hMap, "eleMotor", Motor.GoBILDA.RPM_312);
         wristMotor = new SimpleServo(hMap, "wristMotor", 0, 360, AngleUnit.DEGREES);
 
+        elevatorMotor.setRunMode(Motor.RunMode.RawPower);
+
         //The elevator always has to be inited in the lowest position
         elevatorMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         elevatorMotor.resetEncoder();
 
-        wristMotor.setPosition(0);
-
         //FIXME tune pid
-        elevatorController = new PIDController(0.05, 0, 0);
+        elevatorController = new PIDController(0.2, 0, 0.05);
+        wristController = new PIDController(0.2, 0, 0);
 
         elevatorController.setTolerance(0.1);
 
@@ -49,7 +52,6 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     private void setZero() {
         elevatorMotor.resetEncoder();
-        wristMotor.setPosition(0);
     }
 
     private double getCurrentWristAngle() {
@@ -58,7 +60,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     //check if works
     private double ticksToInchesExtension(double ticks) {
-        return ((38.2 * Math.PI) * ticks) / Motor.GoBILDA.RPM_312.getCPR();
+        return (((38.2 / 25.4) * Math.PI) * ticks) / Motor.GoBILDA.RPM_312.getCPR();
     }
 
     private double extensionToHeightInches(double inches) {
@@ -128,23 +130,23 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public boolean atTargetElevator() {
-        return Util.atTargetTolerance(getCurrentElevatorExtension(), 0.25);
+        return Util.atTargetTolerance(getCurrentElevatorExtension(), targetExtension, 0.5);
     }
 
     public boolean atTargetAngle() {
-        return Util.atTargetTolerance(getCurrentWristAngle(), 2);
+        return Util.atTargetTolerance(getCurrentWristAngle(), targetAngle, 2);
     }
 
     public boolean atTargetAll() {
-        return Util.atTargetTolerance(getCurrentElevatorExtension(), 0.25) && Util.atTargetTolerance(getCurrentWristAngle(), 2);
+        return atTargetElevator() && atTargetAngle();
     }
 
     private void drivePeriodic() {
-       elevatorOutput = elevatorController.calculate(getCurrentElevatorExtension(), determineTargetExtension());
+       elevatorOutput = MathUtils.clamp(elevatorController.calculate(getCurrentElevatorExtension(), determineTargetExtension()), -0.8, 0.8);
+       wristOutput = wristController.calculate(getCurrentWristAngle(), determineTargetAngle());
 
-       elevatorMotor.set(MathUtils.clamp(elevatorOutput + Constants.Elevator.GRAVITY_OFFSET_PERCENT, -0.5, 0.5));
-
-       wristMotor.turnToAngle(determineTargetAngle());
+       elevatorMotor.set(elevatorOutput + Constants.Elevator.GRAVITY_OFFSET_PERCENT);
+       wristMotor.rotateByAngle(wristOutput);
     }
 
     @Override
@@ -158,6 +160,7 @@ public class ElevatorSubsystem extends SubsystemBase {
             packet.put("currentExtension", getCurrentElevatorExtension());
             packet.put("currentAngle", getCurrentWristAngle());
             packet.put("extensionOutput", elevatorOutput);
+            packet.put("wristOutput", wristOutput);
 
             dashboard.sendTelemetryPacket(packet);
         }
