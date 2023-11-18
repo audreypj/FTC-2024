@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.har
 
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -90,20 +91,17 @@ public class RobotContainer {
 //        new ButtonObject(danny, GamepadKeys.Button.A)
 //                .whenActive(new LinearSlideCommand(elevatorSubsystem, Constants.Elevator.Setpoints.MIN_EXTENSION_INCHES));
 
+        new ButtonObject(brandon, GamepadKeys.Button.START)
+                .whenActive(new InstantCommand(drivebaseSubsystem::zeroGyroscope, drivebaseSubsystem));
+
         new ButtonObject(danny, GamepadKeys.Button.Y)
-                .whenActive(new ElevatorCommand(elevatorSubsystem, Constants.Elevator.ScoreStates.CLIMB));
+                .whenActive(new ElevatorCommand(elevatorSubsystem, Constants.Elevator.Setpoints.MAX_EXTENSION_INCHES));
 
         new ButtonObject(danny, GamepadKeys.Button.B)
-                .whenActive(new ElevatorCommand(elevatorSubsystem, Constants.Elevator.ScoreStates.SCORE));
+                .whenActive(new ElevatorCommand(elevatorSubsystem, Constants.Elevator.Setpoints.SCORE));
 
         new ButtonObject(danny, GamepadKeys.Button.A)
-                .whenActive(new ElevatorCommand(elevatorSubsystem, Constants.Elevator.ScoreStates.STOWED));
-
-        new ButtonObject(danny, GamepadKeys.Button.LEFT_BUMPER)
-                .whenActive(new WristCommand(elevatorSubsystem, Constants.Wrist.Setpoints.STOWED));
-
-        new ButtonObject(danny, GamepadKeys.Button.RIGHT_BUMPER)
-                .whenActive(new WristCommand(elevatorSubsystem, Constants.Wrist.Setpoints.SCORE));
+                .whenActive(new ElevatorCommand(elevatorSubsystem, Constants.Elevator.Setpoints.STOWED));
 
         new ButtonObject(brandon, GamepadKeys.Button.LEFT_BUMPER)
                 .whenActive(new ForceIntakeModeCommand(intakeSubsystem, IntakeSubsystem.RunModes.INTAKE));
