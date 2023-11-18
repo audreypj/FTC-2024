@@ -1,19 +1,19 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.RobotContainer;
+import org.firstinspires.ftc.teamcode.autonomous.commands.AutoTest;
 
-import java.util.Optional;
-
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Primaris")
-public class TeleOp extends OpMode {
+@Autonomous(name = "Park", preselectTeleOp = "Primaris")
+public class ParkAuto extends TeleOp {
     private Robot robot;
 
     @Override
     public void init() {
         robot = new Robot(Robot.OpModeType.TELEOP, hardwareMap, gamepad1, gamepad2);
+        robot.setAutonomousCommand(RobotContainer.AutonomousSelection.PARK);
     }
 
     @Override
@@ -30,5 +30,4 @@ public class TeleOp extends OpMode {
     public void loop() {
         robot.run();
     }
-
 }

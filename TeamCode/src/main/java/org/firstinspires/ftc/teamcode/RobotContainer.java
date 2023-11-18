@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 
+import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -24,6 +26,11 @@ import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 import java.util.Optional;
 
 public class RobotContainer {
+
+    public enum AutonomousSelection {
+        TEST, PARK
+    }
+
     private GamepadEx brandon, danny;
     private Gamepad gamepad1, gamepad2;
 
@@ -32,7 +39,7 @@ public class RobotContainer {
     private final IntakeSubsystem intakeSubsystem;
     private final ShooterSubsystem shooterSubsystem;
 
-    public RobotContainer(HardwareMap hardwareMap, Optional<Gamepad> gamepad1, Optional<Gamepad> gamepad2) {
+    public RobotContainer(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2) {
         drivebaseSubsystem  = new DrivebaseSubsystem(hardwareMap);
         armSubsystem = new ArmSubsystem(hardwareMap);
         intakeSubsystem = new IntakeSubsystem(hardwareMap);
@@ -40,20 +47,20 @@ public class RobotContainer {
 
         CommandScheduler.getInstance().registerSubsystem(drivebaseSubsystem);
         CommandScheduler.getInstance().registerSubsystem(intakeSubsystem);
+        CommandScheduler.getInstance().registerSubsystem(shooterSubsystem);
 
-        if(gamepad1.isPresent()) {
-            this.gamepad1 = gamepad1.get();
-            this.gamepad2 = gamepad2.get();
-            brandon = new GamepadEx(this.gamepad1);
-            danny = new GamepadEx(this.gamepad2);
+        this.gamepad1 = gamepad1;
+        this.gamepad2 = gamepad2;
+        brandon = new GamepadEx(this.gamepad1);
+        danny = new GamepadEx(this.gamepad2);
 
-            CommandScheduler.getInstance().setDefaultCommand(
-                    drivebaseSubsystem,
-                    new DefaultDriveCommand(
-                            drivebaseSubsystem,
-                            brandon::getLeftY,
-                            brandon::getLeftX,
-                            brandon::getRightX));
+        CommandScheduler.getInstance().setDefaultCommand(
+                drivebaseSubsystem,
+                new DefaultDriveCommand(
+                        drivebaseSubsystem,
+                        brandon::getLeftY,
+                        brandon::getLeftX,
+                        brandon::getRightX));
 
             CommandScheduler.getInstance().setDefaultCommand(
                     armSubsystem,
@@ -63,15 +70,10 @@ public class RobotContainer {
                             danny::getRightY));
 
             configureButtonBindings();
-        }
-    }
 
-    public RobotContainer(HardwareMap hardwareMap) {
-        this(hardwareMap, Optional.empty(), Optional.empty());
     }
 
     private void configureButtonBindings() {
-
         new ButtonObject(danny, GamepadKeys.Button.Y)
                 .whenActive(new ArmCommand(armSubsystem, Constants.Arm.Setpoints.MAXIMUM_ANGLE));
 
@@ -89,5 +91,16 @@ public class RobotContainer {
 
         new ButtonObject(danny, GamepadKeys.Button.DPAD_UP)
                 .whenActive(new ShooterCommand(shooterSubsystem, ShooterSubsystem.Modes.LAUNCH));
+
+    }
+
+    public Command getAutonomousCommand(AutonomousSelection autonomousSelection) {
+        switch(autonomousSelection) {
+            case TEST:
+                return null;
+            case PARK:
+            default:
+                return null;
+        }
     }
 }

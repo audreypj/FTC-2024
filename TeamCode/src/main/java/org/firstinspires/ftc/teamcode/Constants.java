@@ -38,6 +38,16 @@ public final class Constants {
         }
     }
 
+    public static final class Intake {
+        public static final class ModePowers {
+            //FIXME placeholder values
+            public static final double OFF = 0;
+            public static final double INTAKE = 0.3;
+
+            public static final double OUTTAKE = -0.3;
+        }
+    }
+
     public static final class Shooter {
         public static final class Powers {
             public static final double OFF = 0;
