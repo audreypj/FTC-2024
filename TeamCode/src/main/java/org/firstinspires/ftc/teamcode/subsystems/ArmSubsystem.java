@@ -24,7 +24,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     private final MotorEx armMotor, armMotorTwo, extensionMotor;
 
-    private final PIDController armController, extensionController, climbController;
+    private final PIDController armController, extensionController;
 
     private double targetAngle;
     private double targetExtension;
@@ -63,10 +63,8 @@ public class ArmSubsystem extends SubsystemBase {
 
         armController = new PIDController(0.003, 0.001, 0.001);
         extensionController = new PIDController(0.003, 0, 0.001);
-        climbController = new PIDController(0.003, 0, 0);
         armController.setTolerance(3);
         extensionController.setTolerance(0.1);
-        climbController.setTolerance(0.3);
 
         targetAngle = 0;
         targetExtension = 0;
@@ -75,7 +73,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     private double ticksToInchesExtension(double ticks) {
-        return ((38.2 * Math.PI) * ticks) / extensionMotor.getCPR();
+        return (((38.2 / 25.4) * Math.PI) * ticks) / extensionMotor.getCPR();
     }
 
     private double tickToDegrees(double ticks) {
@@ -157,10 +155,6 @@ public class ArmSubsystem extends SubsystemBase {
         return targetExtension;
     }
 
-    private void climbPeriodic() {
-
-    }
-
     private void posPeriodic() {
         double armPower = armController.calculate(getCorrectedAnglePosition(), determineTargetAngle()) + calculateGravityOffset();
 
@@ -190,9 +184,6 @@ public class ArmSubsystem extends SubsystemBase {
         switch(currentSlideMode) {
             case POSITION:
                 posPeriodic();
-                break;
-            case CLIMB:
-                climbPeriodic();
                 break;
         }
     }
