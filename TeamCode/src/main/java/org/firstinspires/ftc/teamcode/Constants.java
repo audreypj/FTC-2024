@@ -26,12 +26,6 @@ public final class Constants {
             public static final double STOWED = 0;
             public static final double SCORE = 16;
         }
-
-        public static final class ScoreStates {
-            public static final ElevatorCommand.ScoreState STOWED = new ElevatorCommand.ScoreState(Elevator.Setpoints.STOWED, Wrist.Setpoints.STOWED);
-            public static final ElevatorCommand.ScoreState SCORE = new ElevatorCommand.ScoreState(Elevator.Setpoints.SCORE, Wrist.Setpoints.SCORE);
-            public static final ElevatorCommand.ScoreState CLIMB = new ElevatorCommand.ScoreState(Elevator.Setpoints.MAX_EXTENSION_INCHES);
-        }
     }
 
     public static final class Wrist {
@@ -48,9 +42,8 @@ public final class Constants {
         public static final class ModePowers {
             //FIXME placeholder values
             public static final double OFF = 0;
-            public static final double INTAKE = 0.3;
-
-            public static final double OUTTAKE = -0.3;
+            public static final double INTAKE = 0.6;
+            public static final double OUTTAKE = -0.6;
         }
     }
 
