@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import androidx.core.math.MathUtils;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
-import com.arcrobotics.ftclib.controller.PIDFController;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -16,7 +17,7 @@ import java.util.Optional;
 public class ArmSubsystem extends SubsystemBase {
 
     public enum SlideModes {
-        POSITION, CLIMB
+        POSITION
     }
 
     private final FtcDashboard dashboard = FtcDashboard.getInstance();
@@ -58,6 +59,7 @@ public class ArmSubsystem extends SubsystemBase {
 
         armMotor.resetEncoder();
         armMotorTwo.resetEncoder();
+        extensionMotor.resetEncoder();
 
         armMotorTwo.setInverted(true);
 
@@ -82,14 +84,10 @@ public class ArmSubsystem extends SubsystemBase {
         //currentPos/total circumference = degrees/360
         //currentPos = (tickPos / cpr) * gear ratio * totalCircumferece
     }
-    
-    private double getRawAnglePosition() {
-        return tickToDegrees(armMotor.getCurrentPosition());
-    }
 
     //make parallel to ground 0 degrees using offset
-    public double getCorrectedAnglePosition() {
-        return getRawAnglePosition() + Constants.Arm.ARM_ANGLE_OFFSET;
+    public double getAngleDegrees() {
+        return tickToDegrees(armMotor.getCurrentPosition());
     }
 
     public double getCurrentExtension() {
@@ -102,24 +100,24 @@ public class ArmSubsystem extends SubsystemBase {
 
     //0 degrees at parallel
     public void setTargetAngle(double angle) {
-        targetAngle = angle;
+        targetAngle = MathUtils.clamp(angle, Constants.Arm.Setpoints.STOWED, Constants.Arm.Setpoints.MAXIMUM_ANGLE);
     }
 
     public void setTargetExtension(double extension) {
-        targetExtension = extension;
+        targetExtension = MathUtils.clamp(extension, Constants.Slide.Setpoints.STOWED, Constants.Slide.Setpoints.MAXIMUM_EXTENSION);
     }
 
     public void setArmState(ArmState armState) {
-        targetAngle = armState.angle;
-        targetExtension = armState.extension;
+        setTargetAngle(armState.angle);
+        setTargetExtension(armState.extension);
     }
 
     private double calculateGravityOffset() {
-        return Math.sin(getCorrectedAnglePosition() - 90) * Constants.Arm.GRAVITY_PERCENT;
+        return Math.sin(getAngleDegrees() + Constants.Arm.STOWED_OFFSET) * Constants.Arm.GRAVITY_PERCENT;
     }
 
     private boolean isAngleSafe(double angle) {
-        return angle > Constants.Arm.Setpoints.BARE_MIN
+        return angle > Constants.Arm.Setpoints.STOWED
                 && angle < Constants.Arm.Setpoints.MAXIMUM_ANGLE;
     }
 
@@ -129,7 +127,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     private boolean currentOrTargetAngleSafe() {
-        return isAngleSafe(getCorrectedAnglePosition())
+        return isAngleSafe(getAngleDegrees())
                 && isAngleSafe(targetAngle);
     }
 
@@ -148,15 +146,17 @@ public class ArmSubsystem extends SubsystemBase {
     private double determineTargetExtension() {
         if(!currentOrTargetExtensionSafe()) {
             targetExtension = Constants.Slide.Setpoints.STOWED;
-        } else if(getCorrectedAnglePosition() < -10 || targetAngle < -10) {
+        } else if(getAngleDegrees() < Constants.Arm.Setpoints.STOWED
+                || getAngleDegrees() > Constants.Arm.Setpoints.MAXIMUM_ANGLE
+                || targetAngle < Constants.Arm.Setpoints.STOWED
+                || targetAngle > Constants.Arm.Setpoints.MAXIMUM_ANGLE) {
             targetExtension = Constants.Slide.Setpoints.STOWED;
         }
-
         return targetExtension;
     }
 
     private void posPeriodic() {
-        double armPower = armController.calculate(getCorrectedAnglePosition(), determineTargetAngle()) + calculateGravityOffset();
+        double armPower = armController.calculate(getAngleDegrees(), determineTargetAngle()) + calculateGravityOffset();
 
         double extensionOutput = extensionController.calculate(getCurrentExtension(), determineTargetExtension());
 
@@ -172,8 +172,7 @@ public class ArmSubsystem extends SubsystemBase {
         if(Constants.Config.SHOW_DEBUG_DATA) {
             packet.put("targetAngle", targetAngle);
             packet.put("targetExtension", targetExtension);
-            packet.put("correctedAngle", getCorrectedAnglePosition());
-            packet.put("rawAngle", getRawAnglePosition());
+            packet.put("angleDegrees", getAngleDegrees());
             packet.put("currentExtension", getCurrentExtension());
 
             dashboard.sendTelemetryPacket(packet);

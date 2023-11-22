@@ -14,20 +14,21 @@ public final class Constants {
         public static final double ARM_GEAR_RATIO = 0;
         public static final double ARM_SMALL_SPROCKET_CIRCUMFERENCE = 0;
         public static final double ARM_LARGE_SPROCKET_CIRCUMFERENCE = 0;
-
-        public static final double ARM_ANGLE_OFFSET = 0;
         public static final double GRAVITY_PERCENT = 0.08;
+        public static final double STOWED_OFFSET = 50;
 
         public static final class Setpoints {
             //FIXME very important fix pls
-            public static final double PARALLEL = 0;
-            public static final double BARE_MIN = -30;
-            public static final double MAXIMUM_ANGLE = 50;
-            public static final double STOWED = -10;
+            public static final double SCORE = 0;
+            public static final double MAXIMUM_ANGLE = 120;
+            public static final double CLIMB = 90;
+            public static final double STOWED = 0;
         }
 
         public static final class ArmStates {
-            public static final ArmSubsystem.ArmState STOWED = new ArmSubsystem.ArmState(0, 0);
+            public static final ArmSubsystem.ArmState STOWED = new ArmSubsystem.ArmState(Setpoints.STOWED, Slide.Setpoints.STOWED);
+            public static final ArmSubsystem.ArmState CLIMB = new ArmSubsystem.ArmState(Setpoints.CLIMB, Slide.Setpoints.MAXIMUM_EXTENSION);
+            public static final ArmSubsystem.ArmState SCORE = new ArmSubsystem.ArmState(Setpoints.SCORE, Slide.Setpoints.SCORE);
         }
     }
 
@@ -35,6 +36,7 @@ public final class Constants {
         public static final class Setpoints {
             public static final double STOWED = 0;
             public static final double MAXIMUM_EXTENSION = 20;
+            public static final double SCORE = 10;
         }
     }
 
@@ -42,9 +44,9 @@ public final class Constants {
         public static final class ModePowers {
             //FIXME placeholder values
             public static final double OFF = 0;
-            public static final double INTAKE = 0.3;
+            public static final double INTAKE = 0.5;
 
-            public static final double OUTTAKE = -0.3;
+            public static final double OUTTAKE = -0.5;
         }
     }
 

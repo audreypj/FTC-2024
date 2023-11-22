@@ -19,6 +19,6 @@ public class AngleRateCommand extends CommandBase {
 
     @Override
     public void execute() {
-        armSubsystem.setTargetAngle(armSubsystem.getCorrectedAnglePosition() + rate.getAsDouble());
+        armSubsystem.setTargetAngle(armSubsystem.getAngleDegrees() + rate.getAsDouble());
     }
 }

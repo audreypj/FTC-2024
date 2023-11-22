@@ -20,7 +20,7 @@ public class ArmRateCommand extends CommandBase {
 
     @Override
     public void execute() {
-        armSubsystem.setTargetAngle(armSubsystem.getCorrectedAnglePosition() + angleRate.getAsDouble());
+        armSubsystem.setTargetAngle(armSubsystem.getAngleDegrees() + angleRate.getAsDouble());
         armSubsystem.setTargetExtension(armSubsystem.getCurrentExtension() + extensionRate.getAsDouble());
     }
 }
