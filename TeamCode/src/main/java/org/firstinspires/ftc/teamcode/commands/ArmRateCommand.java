@@ -20,7 +20,8 @@ public class ArmRateCommand extends CommandBase {
 
     @Override
     public void execute() {
-        armSubsystem.setTargetAngle(armSubsystem.getAngleDegrees() + angleRate.getAsDouble());
+        armSubsystem.setSlideMode(ArmSubsystem.SlideModes.PERCENT);
+        armSubsystem.setPercentControl(angleRate);
         armSubsystem.setTargetExtension(armSubsystem.getCurrentExtension() + extensionRate.getAsDouble());
     }
 }

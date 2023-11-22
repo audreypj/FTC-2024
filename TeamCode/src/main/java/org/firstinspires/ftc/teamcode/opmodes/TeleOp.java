@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.Robot;
 
 import java.util.Optional;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Primaris")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Secundus")
 public class TeleOp extends OpMode {
     private Robot robot;
 

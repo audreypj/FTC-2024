@@ -21,6 +21,7 @@ public class ArmCommand extends CommandBase {
 
     @Override
     public void initialize() {
+        armSubsystem.setSlideMode(ArmSubsystem.SlideModes.POSITION);
         armSubsystem.setArmState(armState);
     }
 }

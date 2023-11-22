@@ -51,6 +51,11 @@ public class DrivebaseSubsystem extends SubsystemBase {
         bL = new MotorEx(hMap, "bL", Motor.GoBILDA.RPM_312);
         bR = new MotorEx(hMap, "bR", Motor.GoBILDA.RPM_312);
 
+        fL.resetEncoder();
+        fR.resetEncoder();
+        bL.resetEncoder();
+        bR.resetEncoder();
+
         gyro = new RevIMU(hMap);
         gyro.init();
 

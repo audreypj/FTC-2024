@@ -13,11 +13,12 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.Constants;
 
 import java.util.Optional;
+import java.util.function.DoubleSupplier;
 
 public class ArmSubsystem extends SubsystemBase {
 
     public enum SlideModes {
-        POSITION
+        POSITION, PERCENT
     }
 
     private final FtcDashboard dashboard = FtcDashboard.getInstance();
@@ -31,6 +32,7 @@ public class ArmSubsystem extends SubsystemBase {
     private double targetExtension;
 
     private SlideModes currentSlideMode;
+    private DoubleSupplier percentControl;
 
     public static class ArmState {
         public double angle, extension;
@@ -72,6 +74,7 @@ public class ArmSubsystem extends SubsystemBase {
         targetExtension = 0;
 
         currentSlideMode = SlideModes.POSITION;
+        percentControl = () -> 0;
     }
 
     private double ticksToInchesExtension(double ticks) {
@@ -91,7 +94,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public double getCurrentExtension() {
-        return ticksToInchesExtension(extensionMotor.getCurrentPosition());
+        return -ticksToInchesExtension(extensionMotor.getCurrentPosition());
     }
 
     public void setSlideMode(SlideModes mode) {
@@ -101,6 +104,10 @@ public class ArmSubsystem extends SubsystemBase {
     //0 degrees at parallel
     public void setTargetAngle(double angle) {
         targetAngle = MathUtils.clamp(angle, Constants.Arm.Setpoints.STOWED, Constants.Arm.Setpoints.MAXIMUM_ANGLE);
+    }
+
+    public void setPercentControl(DoubleSupplier percent) {
+        percentControl = percent;
     }
 
     public void setTargetExtension(double extension) {
@@ -165,6 +172,16 @@ public class ArmSubsystem extends SubsystemBase {
         extensionMotor.set(extensionOutput);
     }
 
+    private void percentPeriodic() {
+
+        double armPower = percentControl.getAsDouble() + calculateGravityOffset();
+        double extensionOutput = extensionController.calculate(getCurrentExtension(), determineTargetExtension());
+
+        armMotor.set(armPower);
+        armMotorTwo.set(armPower);
+        extensionMotor.set(extensionOutput);
+    }
+
     @Override
     public void periodic() {
         applyMode();
@@ -183,6 +200,9 @@ public class ArmSubsystem extends SubsystemBase {
         switch(currentSlideMode) {
             case POSITION:
                 posPeriodic();
+                break;
+            case PERCENT:
+                percentPeriodic();
                 break;
         }
     }
