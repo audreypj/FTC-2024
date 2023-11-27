@@ -24,4 +24,12 @@ public class ArmCommand extends CommandBase {
         armSubsystem.setSlideMode(ArmSubsystem.SlideModes.POSITION);
         armSubsystem.setArmState(armState);
     }
+
+    @Override
+    public boolean isFinished() {
+        return armSubsystem.atTargetAll();
+    }
+
+    @Override
+    public void end(boolean interrupted) {}
 }

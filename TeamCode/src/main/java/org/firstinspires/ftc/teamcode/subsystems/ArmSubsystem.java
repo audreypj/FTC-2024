@@ -11,6 +11,7 @@ import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Util;
 
 import java.util.Optional;
 import java.util.function.DoubleSupplier;
@@ -160,6 +161,18 @@ public class ArmSubsystem extends SubsystemBase {
             targetExtension = Constants.Slide.Setpoints.STOWED;
         }
         return targetExtension;
+    }
+
+    public boolean atTargetExtension() {
+        return Util.atTargetTolerance(getCurrentExtension(), targetExtension, 0.25);
+    }
+
+    public boolean atTargetAngle() {
+        return Util.atTargetTolerance(getAngleDegrees(), targetAngle, 0.25);
+    }
+
+    public boolean atTargetAll() {
+        return atTargetExtension() && atTargetAngle();
     }
 
     private void posPeriodic() {
