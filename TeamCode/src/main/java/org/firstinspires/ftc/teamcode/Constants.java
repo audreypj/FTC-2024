@@ -24,7 +24,6 @@ public final class Constants {
             public static final double CLIMB = 90;
             public static final double STOWED = 0;
         }
-
         public static final class ArmStates {
             public static final ArmSubsystem.ArmState STOWED = new ArmSubsystem.ArmState(Setpoints.STOWED, Slide.Setpoints.STOWED);
             public static final ArmSubsystem.ArmState CLIMB = new ArmSubsystem.ArmState(Setpoints.CLIMB, Slide.Setpoints.MAXIMUM_EXTENSION);

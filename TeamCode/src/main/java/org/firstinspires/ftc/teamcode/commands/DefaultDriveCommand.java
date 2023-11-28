@@ -10,13 +10,14 @@ import java.util.function.DoubleSupplier;
 public class DefaultDriveCommand extends CommandBase {
 
     private final DrivebaseSubsystem drivebaseSubsystem;
-    private DoubleSupplier leftY, leftX, rightX;
 
-    public DefaultDriveCommand(DrivebaseSubsystem drivebaseSubsystem, DoubleSupplier leftY, DoubleSupplier leftX, DoubleSupplier rightX) {
+    private DoubleSupplier translationXSupplier, translationYSupplier, rightX;
+
+    public DefaultDriveCommand(DrivebaseSubsystem drivebaseSubsystem, DoubleSupplier translationXSupplier, DoubleSupplier translationYSupplier, DoubleSupplier rightX) {
         this.drivebaseSubsystem = drivebaseSubsystem;
 
-        this.leftY = leftY;
-        this.leftX = leftX;
+        this.translationXSupplier = translationXSupplier;
+        this.translationYSupplier = translationYSupplier;
         this.rightX = rightX;
 
         addRequirements(drivebaseSubsystem);
@@ -26,8 +27,8 @@ public class DefaultDriveCommand extends CommandBase {
     public void execute() {
         drivebaseSubsystem.drive(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
-                        leftY.getAsDouble(),
-                        leftX.getAsDouble(),
+                        translationXSupplier.getAsDouble(),
+                        translationYSupplier.getAsDouble(),
                         rightX.getAsDouble(),
                         drivebaseSubsystem.getConsistentGyroAngle()));
     }

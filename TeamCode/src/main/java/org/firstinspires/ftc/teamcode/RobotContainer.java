@@ -14,9 +14,17 @@ import org.firstinspires.ftc.teamcode.commands.DefaultDriveCommand;
 import org.firstinspires.ftc.teamcode.commands.ForceIntakeModeCommand;
 import org.firstinspires.ftc.teamcode.commands.ShooterCommand;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
+import org.firstinspires.ftc.teamcode.commands.DriveRawJoystickCommand;
+import org.firstinspires.ftc.teamcode.commands.ForceIntakeModeCommand;
+import org.firstinspires.ftc.teamcode.commands.ShooterCommand;
+import org.firstinspires.ftc.teamcode.commands.ZeroDrivebaseCommand;
+import org.firstinspires.ftc.teamcode.opmodes.ParkAuto;
 import org.firstinspires.ftc.teamcode.subsystems.DrivebaseSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
+
+import java.util.Optional;
+import java.util.function.DoubleSupplier;
 
 public class RobotContainer {
 
@@ -31,6 +39,7 @@ public class RobotContainer {
     private final ArmSubsystem armSubsystem;
     private final IntakeSubsystem intakeSubsystem;
     private final ShooterSubsystem shooterSubsystem;
+
 
     public RobotContainer(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2) {
         drivebaseSubsystem  = new DrivebaseSubsystem(hardwareMap);
@@ -51,22 +60,25 @@ public class RobotContainer {
                 drivebaseSubsystem,
                 new DefaultDriveCommand(
                         drivebaseSubsystem,
-                        brandon::getLeftY,
-                        brandon::getLeftX,
-                        brandon::getRightX));
+                        () -> {return Util.modifyJoystick(brandon.getLeftY(), 0.07);},
+                        () -> {return -Util.modifyJoystick(brandon.getLeftX(), 0.07);},
+                        () -> {return Util.modifyJoystick(brandon.getRightX(), 0.07) * 4;}));
 
             CommandScheduler.getInstance().setDefaultCommand(
                     armSubsystem,
                     new ArmRateCommand(
                             armSubsystem,
-                            danny::getLeftY,
-                            danny::getRightY));
+                            () -> {return Util.modifyJoystick(danny.getLeftY(), 0.07);},
+                            () -> {return Util.modifyJoystick(danny.getRightY(), 0.07);}));
 
             configureButtonBindings();
-
     }
 
     private void configureButtonBindings() {
+
+        new ButtonObject(brandon, GamepadKeys.Button.BACK)
+                .whenActive(new ZeroDrivebaseCommand(drivebaseSubsystem));
+
         new ButtonObject(danny, GamepadKeys.Button.Y)
                 .whenActive(new ArmCommand(armSubsystem, Constants.Arm.Setpoints.MAXIMUM_ANGLE));
 
