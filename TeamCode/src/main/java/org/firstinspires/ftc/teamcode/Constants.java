@@ -19,9 +19,9 @@ public final class Constants {
 
         public static final class Setpoints {
             //FIXME very important fix pls
-            public static final double SCORE = 0;
+            public static final double SCORE = 90;
             public static final double MAXIMUM_ANGLE = 120;
-            public static final double CLIMB = 90;
+            public static final double CLIMB = 100;
             public static final double STOWED = 0;
         }
         public static final class ArmStates {

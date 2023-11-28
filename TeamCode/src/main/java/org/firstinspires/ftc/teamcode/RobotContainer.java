@@ -85,8 +85,8 @@ public class RobotContainer {
         new ButtonObject(danny, GamepadKeys.Button.A)
                 .whenActive(new ArmCommand(armSubsystem, Constants.Arm.Setpoints.STOWED));
 
-        new ButtonObject(danny, GamepadKeys.Button.X)
-                .whenActive(new ArmCommand(armSubsystem, Constants.Arm.ArmStates.STOWED));
+        new ButtonObject(danny, GamepadKeys.Button.B)
+                .whenActive(new ArmCommand(armSubsystem, Constants.Arm.ArmStates.SCORE));
 
         new Trigger(() -> danny.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.3)
                 .whileActiveContinuous(new ForceIntakeModeCommand(intakeSubsystem, IntakeSubsystem.Modes.INTAKE));
