@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.commands.ElevatorCommand;
 import org.firstinspires.ftc.teamcode.commands.ElevatorRateCommand;
 import org.firstinspires.ftc.teamcode.commands.ForceIntakeModeCommand;
 import org.firstinspires.ftc.teamcode.commands.ShooterCommand;
+import org.firstinspires.ftc.teamcode.commands.ZeroDrivebaseCommand;
 import org.firstinspires.ftc.teamcode.opmodes.ParkAuto;
 import org.firstinspires.ftc.teamcode.subsystems.DrivebaseSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ElevatorSubsystem;
@@ -27,6 +28,7 @@ import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 
 import java.util.Optional;
+import java.util.function.DoubleSupplier;
 
 public class RobotContainer {
 
@@ -41,6 +43,7 @@ public class RobotContainer {
     private final ElevatorSubsystem elevatorSubsystem;
     private final IntakeSubsystem intakeSubsystem;
     private final ShooterSubsystem shooterSubsystem;
+
 
     public RobotContainer(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2) {
         drivebaseSubsystem  = new DrivebaseSubsystem(hardwareMap);
@@ -62,15 +65,15 @@ public class RobotContainer {
                 drivebaseSubsystem,
                 new DefaultDriveCommand(
                         drivebaseSubsystem,
-                        brandon::getLeftY,
-                        brandon::getLeftX,
-                        brandon::getRightX));
+                        () -> {return Util.modifyJoystick(brandon.getLeftY(), 0.07);},
+                        () -> {return -Util.modifyJoystick(brandon.getLeftX(), 0.07);},
+                        () -> {return Util.modifyJoystick(brandon.getRightX(), 0.07) * 4;}));
 
         CommandScheduler.getInstance().setDefaultCommand(
                 elevatorSubsystem,
                 new ElevatorRateCommand(
                         elevatorSubsystem,
-                        danny::getLeftY,
+                        () -> {return Util.modifyJoystick(danny.getLeftY(), 0.07);},
                         danny::getRightY));
 
         configureButtonBindings();
@@ -87,8 +90,8 @@ public class RobotContainer {
 //        new ButtonObject(danny, GamepadKeys.Button.A)
 //                .whenActive(new LinearSlideCommand(elevatorSubsystem, Constants.Elevator.Setpoints.MIN_EXTENSION_INCHES));
 
-        new ButtonObject(brandon, GamepadKeys.Button.START)
-                .whenActive(new InstantCommand(drivebaseSubsystem::zeroGyroscope, drivebaseSubsystem));
+        new ButtonObject(brandon, GamepadKeys.Button.BACK)
+                .whenActive(new ZeroDrivebaseCommand(drivebaseSubsystem));
 
         new ButtonObject(danny, GamepadKeys.Button.Y)
                 .whenActive(new ElevatorCommand(elevatorSubsystem, Constants.Elevator.Setpoints.MAX_EXTENSION_INCHES));

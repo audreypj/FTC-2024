@@ -53,6 +53,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
         gyro = new RevIMU(hMap);
         gyro.init();
+        gyro.reset();
 
         mecanum = new MecanumDrive(true, fL, fR, bL, bR);
 
