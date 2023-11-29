@@ -73,23 +73,13 @@ public class RobotContainer {
                 elevatorSubsystem,
                 new ElevatorRateCommand(
                         elevatorSubsystem,
-                        () -> {return Util.modifyJoystick(danny.getLeftY(), 0.07);},
-                        danny::getRightY));
+                        () -> {return Util.modifyJoystick(danny.getRightY(), 0.07);},
+                        () -> {return Util.modifyJoystick(danny.getLeftY(), 0.07);}));
 
         configureButtonBindings();
     }
 
     private void configureButtonBindings() {
-
-//        new ButtonObject(danny, GamepadKeys.Button.Y)
-//                .whenActive(new LinearSlideCommand(elevatorSubsystem, Constants.Elevator.Setpoints.MIN_EXTENSION_INCHES));
-//
-//        new ButtonObject(danny, GamepadKeys.Button.B)
-//                .whenActive(new LinearSlideCommand(elevatorSubsystem, Constants.Elevator.Setpoints.MID_HEIGHT_INCHES));
-//
-//        new ButtonObject(danny, GamepadKeys.Button.A)
-//                .whenActive(new LinearSlideCommand(elevatorSubsystem, Constants.Elevator.Setpoints.MIN_EXTENSION_INCHES));
-
         new ButtonObject(brandon, GamepadKeys.Button.BACK)
                 .whenActive(new ZeroDrivebaseCommand(drivebaseSubsystem));
 
@@ -109,10 +99,10 @@ public class RobotContainer {
                 .whenActive(new ForceIntakeModeCommand(intakeSubsystem, IntakeSubsystem.RunModes.OUTTAKE));
 
         new Trigger(() -> danny.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.3)
-                .whenActive(new ForceIntakeModeCommand(intakeSubsystem, IntakeSubsystem.RunModes.INTAKE));
+                .whileActiveContinuous(new ForceIntakeModeCommand(intakeSubsystem, IntakeSubsystem.RunModes.OUTTAKE));
 
         new Trigger(() -> danny.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.3)
-                .whenActive(new ForceIntakeModeCommand(intakeSubsystem, IntakeSubsystem.RunModes.OUTTAKE));
+                .whileActiveContinuous(new ForceIntakeModeCommand(intakeSubsystem, IntakeSubsystem.RunModes.INTAKE));
 
         new ButtonObject(danny, GamepadKeys.Button.DPAD_UP)
                 .whenActive(new ShooterCommand(shooterSubsystem, ShooterSubsystem.Modes.LAUNCH));

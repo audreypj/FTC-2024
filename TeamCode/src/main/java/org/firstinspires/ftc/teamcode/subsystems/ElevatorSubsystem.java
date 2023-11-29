@@ -25,12 +25,9 @@ public class ElevatorSubsystem extends SubsystemBase {
     private final MotorEx elevatorMotor;
     private final CRServo wristMotor;
     private final PIDController elevatorController;
-    private final PIDController wristController;
 
     private double elevatorOutput = 0;
-    private double wristOutput = 0;
     private double targetExtension = 0;
-    private double targetAngle = 0;
 
     private DoubleSupplier wristControlJoystick;
 
@@ -47,8 +44,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         elevatorMotor.resetEncoder();
 
         //FIXME tune pid
-        elevatorController = new PIDController(0.5, 0, 0);
-        wristController = new PIDController(0.2, 0, 0);
+        elevatorController = new PIDController(0.2, 0, 0);
 
         elevatorController.setTolerance(0.1);
 
@@ -114,12 +110,8 @@ public class ElevatorSubsystem extends SubsystemBase {
         return Util.atTargetTolerance(getCurrentElevatorExtension(), targetExtension, 0.5);
     }
 
-    public boolean atTargetAngle() {
-        return Util.atTargetTolerance(getCurrentWristAngle(), targetAngle, 2);
-    }
-
     public boolean atTargetAll() {
-        return atTargetElevator() && atTargetAngle();
+        return atTargetElevator();
     }
 
     private void drivePeriodic() {
@@ -138,11 +130,9 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         if(Constants.Config.SHOW_DEBUG_DATA) {
             packet.put("targetExtension", targetExtension);
-            packet.put("targetAngle", targetAngle);
             packet.put("currentExtension", getCurrentElevatorExtension());
             packet.put("currentAngle", getCurrentWristAngle());
             packet.put("extensionOutput", elevatorOutput);
-            packet.put("wristOutput", wristOutput);
 
             dashboard.sendTelemetryPacket(packet);
         }

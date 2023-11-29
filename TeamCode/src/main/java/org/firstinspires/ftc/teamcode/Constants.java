@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import org.firstinspires.ftc.teamcode.commands.ElevatorCommand;
-
 public final class Constants {
 
     public static final class Config {
@@ -22,28 +20,17 @@ public final class Constants {
             public static final double MAX_EXTENSION_INCHES = 28; //slightly less than max for safety
             public static final double MID_HEIGHT_INCHES = 12;
             public static final double HIGH_SETPOINT = 20;
-            public static final double STOW_WRIST_EXTENSION = 8;
             public static final double STOWED = 0;
             public static final double SCORE = 16;
         }
-    }
-
-    public static final class Wrist {
-
-        public static final class Setpoints {
-            public static final double STOWED = 0;
-            public static final double SCORE = 30;
-            public static final double MAXIMUM = 60;
-        }
-
     }
 
     public static final class Intake {
         public static final class ModePowers {
             //FIXME placeholder values
             public static final double OFF = 0;
-            public static final double INTAKE = 0.6;
-            public static final double OUTTAKE = -0.6;
+            public static final double INTAKE = 1;
+            public static final double OUTTAKE = -1;
         }
     }
 
