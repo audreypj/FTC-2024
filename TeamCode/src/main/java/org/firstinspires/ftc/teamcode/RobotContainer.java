@@ -32,8 +32,8 @@ public class RobotContainer {
         TEST, PARK
     }
 
-    private GamepadEx brandon, danny;
-    private Gamepad gamepad1, gamepad2;
+    private final GamepadEx brandon, danny;
+    private final Gamepad gamepad1, gamepad2;
 
     private final DrivebaseSubsystem drivebaseSubsystem;
     private final ArmSubsystem armSubsystem;

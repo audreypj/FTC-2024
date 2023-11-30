@@ -27,15 +27,15 @@ import java.util.function.DoubleSupplier;
 
 public class DrivebaseSubsystem extends SubsystemBase {
 
-    private FtcDashboard dashboard = FtcDashboard.getInstance();
+    private final FtcDashboard dashboard = FtcDashboard.getInstance();
     private final TelemetryPacket packet = new TelemetryPacket();
 
-    private MotorEx fL,fR,bL,bR;
-    private RevIMU gyro;
+    private final MotorEx fL,fR,bL,bR;
+    private final RevIMU gyro;
 
-    private MecanumDrive mecanum;
-    private MecanumDriveKinematics kinematics;
-    private MecanumDriveOdometry odometry;
+    private final MecanumDrive mecanum;
+    private final MecanumDriveKinematics kinematics;
+    private final MecanumDriveOdometry odometry;
     private Pose2d robotPose = new Pose2d();
     private ChassisSpeeds chassisSpeeds = new ChassisSpeeds();
 
@@ -99,7 +99,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
     }
 
     public Rotation2d getConsistentGyroAngle() {
-        return Rotation2d.fromDegrees(Util.normalizeDegrees(-gyro.getAngles()[0])); //FIXME make sure this is correct angle b/c engie flipped hub
+        return Rotation2d.fromDegrees(Util.normalizeDegrees(-gyro.getAngles()[0] + 180)); //FIXME make sure this is correct angle b/c engie flipped hub
     }
 
     public void zeroGyroscope() {

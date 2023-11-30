@@ -35,6 +35,9 @@ public class ArmSubsystem extends SubsystemBase {
     private SlideModes currentSlideMode;
     private DoubleSupplier percentControl;
 
+    private double armPower;
+    private double extensionOutput;
+
     public static class ArmState {
         public double angle, extension;
         public ArmState(Optional<Double> angle, Optional<Double> extension) {
@@ -204,6 +207,8 @@ public class ArmSubsystem extends SubsystemBase {
             packet.put("targetExtension", targetExtension);
             packet.put("angleDegrees", getAngleDegrees());
             packet.put("currentExtension", getCurrentExtension());
+            packet.put("armPower", armPower);
+            packet.put("extensionOutput", extensionOutput);
 
             dashboard.sendTelemetryPacket(packet);
         }

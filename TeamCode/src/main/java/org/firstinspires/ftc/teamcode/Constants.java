@@ -14,8 +14,8 @@ public final class Constants {
         public static final double ARM_GEAR_RATIO = 0;
         public static final double ARM_SMALL_SPROCKET_CIRCUMFERENCE = 0;
         public static final double ARM_LARGE_SPROCKET_CIRCUMFERENCE = 0;
-        public static final double GRAVITY_PERCENT = 0.08;
-        public static final double STOWED_OFFSET = 50;
+        public static final double GRAVITY_PERCENT = 0.20;
+        public static final double STOWED_OFFSET = 0;
 
         public static final class Setpoints {
             //FIXME very important fix pls
