@@ -69,8 +69,8 @@ public class ArmSubsystem extends SubsystemBase {
 
         armMotorTwo.setInverted(true);
 
-        armController = new PIDController(0.003, 0.001, 0.001);
-        extensionController = new PIDController(0.003, 0, 0.001);
+        armController = new PIDController(0.2, 0, 0);
+        extensionController = new PIDController(0.2, 0, 0);
         armController.setTolerance(3);
         extensionController.setTolerance(0.1);
 
@@ -79,6 +79,9 @@ public class ArmSubsystem extends SubsystemBase {
 
         currentSlideMode = SlideModes.POSITION;
         percentControl = () -> 0;
+
+        armPower = 0;
+        extensionOutput = 0;
     }
 
     private double ticksToInchesExtension(double ticks) {
@@ -179,9 +182,9 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     private void posPeriodic() {
-        double armPower = armController.calculate(getAngleDegrees(), determineTargetAngle()) + calculateGravityOffset();
+        armPower = armController.calculate(getAngleDegrees(), determineTargetAngle()) + calculateGravityOffset();
 
-        double extensionOutput = extensionController.calculate(getCurrentExtension(), determineTargetExtension());
+        extensionOutput = extensionController.calculate(getCurrentExtension(), determineTargetExtension());
 
         armMotor.set(armPower);
         armMotorTwo.set(armPower);
@@ -190,7 +193,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     private void percentPeriodic() {
 
-        double armPower = percentControl.getAsDouble() + calculateGravityOffset();
+        armPower = percentControl.getAsDouble() + calculateGravityOffset();
         double extensionOutput = extensionController.calculate(getCurrentExtension(), determineTargetExtension());
 
         armMotor.set(armPower);
