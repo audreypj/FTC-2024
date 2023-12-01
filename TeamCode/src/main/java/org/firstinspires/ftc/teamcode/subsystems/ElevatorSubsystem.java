@@ -44,7 +44,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         elevatorMotor.resetEncoder();
 
         //FIXME tune pid
-        elevatorController = new PIDController(0.2, 0, 0);
+        elevatorController = new PIDController(0.25, 0, 0);
 
         elevatorController.setTolerance(0.1);
 

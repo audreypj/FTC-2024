@@ -91,7 +91,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
     }
 
     public Rotation2d getConsistentGyroAngle() {
-        return Rotation2d.fromDegrees(Util.normalizeDegrees(-gyro.getAngles()[0])); //FIXME make sure this is correct angle b/c engie flipped hub
+        return Rotation2d.fromDegrees(Util.normalizeDegrees(gyro.getAngles()[0])); //FIXME make sure this is correct angle b/c engie flipped hub
     }
 
     public void zeroGyroscope() {
@@ -124,6 +124,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
                 forwardSpeed.getAsDouble(),
                 turnSpeed.getAsDouble(),
                 getConsistentGyroAngle().getDegrees());
+//        mecanum.driveRobotCentric(strafeSpeed.getAsDouble(), forwardSpeed.getAsDouble(), turnSpeed.getAsDouble());
     }
 
     @Override
@@ -133,6 +134,9 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
         if(SHOW_DEBUG_DATA) {
             packet.put("gyro angle", getConsistentGyroAngle());
+            packet.put("leftY", forwardSpeed.getAsDouble());
+            packet.put("leftX", strafeSpeed.getAsDouble());
+            packet.put("rightX", turnSpeed.getAsDouble());
 
             dashboard.sendTelemetryPacket(packet);
         }

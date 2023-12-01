@@ -31,7 +31,7 @@ public class DefaultDriveCommand extends CommandBase {
 //                        translationYSupplier.getAsDouble(),
 //                        rightX.getAsDouble(),
 //                        drivebaseSubsystem.getConsistentGyroAngle()));
-        drivebaseSubsystem.driveFieldCentricJoystick(translationXSupplier, translationYSupplier, translationXSupplier);
+        drivebaseSubsystem.driveFieldCentricJoystick(translationXSupplier, translationYSupplier, rightX);
     }
 
     @Override

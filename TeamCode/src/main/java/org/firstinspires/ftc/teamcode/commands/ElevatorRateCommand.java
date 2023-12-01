@@ -21,7 +21,7 @@ public class ElevatorRateCommand extends CommandBase {
 
     @Override
     public void execute() {
-        elevatorSubsystem.setElevatorTargetInches(elevatorSubsystem.getCurrentElevatorExtension() + extensionRate.getAsDouble());
+        elevatorSubsystem.setElevatorTargetInches(elevatorSubsystem.getCurrentElevatorExtension() + extensionRate.getAsDouble() * 4);
         elevatorSubsystem.setWristControl(angleRate);
     }
 

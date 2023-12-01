@@ -21,14 +21,10 @@ import org.firstinspires.ftc.teamcode.commands.ElevatorRateCommand;
 import org.firstinspires.ftc.teamcode.commands.ForceIntakeModeCommand;
 import org.firstinspires.ftc.teamcode.commands.ShooterCommand;
 import org.firstinspires.ftc.teamcode.commands.ZeroDrivebaseCommand;
-import org.firstinspires.ftc.teamcode.opmodes.ParkAuto;
 import org.firstinspires.ftc.teamcode.subsystems.DrivebaseSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ElevatorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
-
-import java.util.Optional;
-import java.util.function.DoubleSupplier;
 
 public class RobotContainer {
 
@@ -66,14 +62,14 @@ public class RobotContainer {
                 new DefaultDriveCommand(
                         drivebaseSubsystem,
                         () -> {return Util.modifyJoystick(brandon.getLeftY(), 0.07);},
-                        () -> {return -Util.modifyJoystick(brandon.getLeftX(), 0.07);},
-                        () -> {return Util.modifyJoystick(brandon.getRightX(), 0.07) * 4;}));
+                        () -> {return Util.modifyJoystick(brandon.getLeftX(), 0.07);},
+                        () -> {return -Util.modifyJoystick(brandon.getRightX(), 0.07);}));
 
         CommandScheduler.getInstance().setDefaultCommand(
                 elevatorSubsystem,
                 new ElevatorRateCommand(
                         elevatorSubsystem,
-                        () -> {return Util.modifyJoystick(danny.getRightY(), 0.07);},
+                        () -> {return -Util.modifyJoystick(danny.getRightY(), 0.07);},
                         () -> {return Util.modifyJoystick(danny.getLeftY(), 0.07);}));
 
         configureButtonBindings();
@@ -92,11 +88,14 @@ public class RobotContainer {
         new ButtonObject(danny, GamepadKeys.Button.A)
                 .whenActive(new ElevatorCommand(elevatorSubsystem, Constants.Elevator.Setpoints.STOWED));
 
-        new ButtonObject(brandon, GamepadKeys.Button.LEFT_BUMPER)
-                .whenActive(new ForceIntakeModeCommand(intakeSubsystem, IntakeSubsystem.RunModes.INTAKE));
-
         new ButtonObject(brandon, GamepadKeys.Button.RIGHT_BUMPER)
-                .whenActive(new ForceIntakeModeCommand(intakeSubsystem, IntakeSubsystem.RunModes.OUTTAKE));
+                .whileActiveContinuous(new ForceIntakeModeCommand(intakeSubsystem, IntakeSubsystem.RunModes.INTAKE));
+
+        new ButtonObject(brandon, GamepadKeys.Button.LEFT_BUMPER)
+                .whileActiveContinuous(new ForceIntakeModeCommand(intakeSubsystem, IntakeSubsystem.RunModes.OUTTAKE));
+
+        new ButtonObject(brandon, GamepadKeys.Button.X)
+                .whenActive(new ForceIntakeModeCommand(intakeSubsystem, IntakeSubsystem.RunModes.OFF));
 
         new Trigger(() -> danny.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.3)
                 .whileActiveContinuous(new ForceIntakeModeCommand(intakeSubsystem, IntakeSubsystem.RunModes.OUTTAKE));

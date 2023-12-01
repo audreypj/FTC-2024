@@ -21,7 +21,7 @@ public final class Constants {
             public static final double MID_HEIGHT_INCHES = 12;
             public static final double HIGH_SETPOINT = 20;
             public static final double STOWED = 0;
-            public static final double SCORE = 16;
+            public static final double SCORE = 19.5;
         }
     }
 
