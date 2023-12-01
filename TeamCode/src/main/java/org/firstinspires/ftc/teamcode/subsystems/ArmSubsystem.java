@@ -37,6 +37,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     private double armPower;
     private double extensionOutput;
+    private DoubleSupplier elevatorJoystick = () -> 0;
 
     public static class ArmState {
         public double angle, extension;
@@ -90,7 +91,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     private double tickToDegrees(double ticks) {
         //FIXME make sure math works
-        return ((ticks / 2786) * Constants.Arm.ARM_GEAR_RATIO) * 360;
+        return ((ticks / armMotor.getCPR()) * Constants.Arm.ARM_GEAR_RATIO) * 360;
         //currentPos/total circumference = degrees/360
         //currentPos = (tickPos / cpr) * gear ratio * totalCircumferece
     }
@@ -173,6 +174,10 @@ public class ArmSubsystem extends SubsystemBase {
         return Util.atTargetTolerance(getCurrentExtension(), targetExtension, 0.25);
     }
 
+    public void setElevatorJoystick(DoubleSupplier x) {
+        elevatorJoystick = x;
+    }
+
     public boolean atTargetAngle() {
         return Util.atTargetTolerance(getAngleDegrees(), targetAngle, 0.25);
     }
@@ -198,7 +203,7 @@ public class ArmSubsystem extends SubsystemBase {
 
         armMotor.set(armPower);
         armMotorTwo.set(armPower);
-        extensionMotor.set(extensionOutput);
+        extensionMotor.set(elevatorJoystick.getAsDouble());
     }
 
     @Override

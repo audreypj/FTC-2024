@@ -41,6 +41,7 @@ public class RobotContainer {
         shooterSubsystem = new ShooterSubsystem(hardwareMap);
 
         CommandScheduler.getInstance().registerSubsystem(drivebaseSubsystem);
+        CommandScheduler.getInstance().registerSubsystem(armSubsystem);
         CommandScheduler.getInstance().registerSubsystem(intakeSubsystem);
         CommandScheduler.getInstance().registerSubsystem(shooterSubsystem);
 
@@ -55,7 +56,7 @@ public class RobotContainer {
                         drivebaseSubsystem,
                         () -> {return Util.modifyJoystick(brandon.getLeftY(), 0.07);},
                         () -> {return Util.modifyJoystick(brandon.getLeftX(), 0.07);},
-                        () -> {return -Util.modifyJoystick(brandon.getRightX(), 0.07);}));
+                        () -> {return Util.modifyJoystick(brandon.getRightX(), 0.07);}));
 
             CommandScheduler.getInstance().setDefaultCommand(
                     armSubsystem,

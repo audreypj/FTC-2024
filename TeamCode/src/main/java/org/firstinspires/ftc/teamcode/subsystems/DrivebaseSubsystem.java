@@ -97,7 +97,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
     }
 
     public Rotation2d getConsistentGyroAngle() {
-        return Rotation2d.fromDegrees(Util.normalizeDegrees(gyro.getAngles()[0] - 180)); //FIXME make sure this is correct angle b/c engie flipped hub
+        return Rotation2d.fromDegrees(Util.normalizeDegrees(gyro.getAngles()[0])); //FIXME make sure this is correct angle b/c engie flipped hub
 
     }
 
