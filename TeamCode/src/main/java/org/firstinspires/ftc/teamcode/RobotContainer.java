@@ -14,17 +14,10 @@ import org.firstinspires.ftc.teamcode.commands.DefaultDriveCommand;
 import org.firstinspires.ftc.teamcode.commands.ForceIntakeModeCommand;
 import org.firstinspires.ftc.teamcode.commands.ShooterCommand;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
-import org.firstinspires.ftc.teamcode.commands.DriveRawJoystickCommand;
-import org.firstinspires.ftc.teamcode.commands.ForceIntakeModeCommand;
-import org.firstinspires.ftc.teamcode.commands.ShooterCommand;
 import org.firstinspires.ftc.teamcode.commands.ZeroDrivebaseCommand;
-import org.firstinspires.ftc.teamcode.opmodes.ParkAuto;
 import org.firstinspires.ftc.teamcode.subsystems.DrivebaseSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
-
-import java.util.Optional;
-import java.util.function.DoubleSupplier;
 
 public class RobotContainer {
 
@@ -61,8 +54,8 @@ public class RobotContainer {
                 new DefaultDriveCommand(
                         drivebaseSubsystem,
                         () -> {return Util.modifyJoystick(brandon.getLeftY(), 0.07);},
-                        () -> {return -Util.modifyJoystick(brandon.getLeftX(), 0.07);},
-                        () -> {return Util.modifyJoystick(brandon.getRightX(), 0.07) * 4;}));
+                        () -> {return Util.modifyJoystick(brandon.getLeftX(), 0.07);},
+                        () -> {return -Util.modifyJoystick(brandon.getRightX(), 0.07);}));
 
             CommandScheduler.getInstance().setDefaultCommand(
                     armSubsystem,
@@ -75,7 +68,6 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
-
         new ButtonObject(brandon, GamepadKeys.Button.BACK)
                 .whenActive(new ZeroDrivebaseCommand(drivebaseSubsystem));
 
@@ -96,7 +88,6 @@ public class RobotContainer {
 
         new ButtonObject(danny, GamepadKeys.Button.DPAD_UP)
                 .whenActive(new ShooterCommand(shooterSubsystem, ShooterSubsystem.Modes.LAUNCH));
-
     }
 
     public Command getAutonomousCommand(AutonomousSelection autonomousSelection) {

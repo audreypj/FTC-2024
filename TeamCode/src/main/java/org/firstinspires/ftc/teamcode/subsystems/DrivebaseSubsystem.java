@@ -9,7 +9,6 @@ import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.arcrobotics.ftclib.geometry.Translation2d;
-import com.arcrobotics.ftclib.hardware.GyroEx;
 import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
@@ -19,7 +18,6 @@ import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveOdometry;
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveWheelSpeeds;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.Util;
 
@@ -39,7 +37,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
     private Pose2d robotPose = new Pose2d();
     private ChassisSpeeds chassisSpeeds = new ChassisSpeeds();
 
-    private DoubleSupplier leftY, leftX, rightX;
+    private DoubleSupplier forwardSpeed, strafeSpeed, turnSpeed;
 
     //FIXME placeholders. put actual positions once get finalized robot
     private final Translation2d[] motorPositions = {new Translation2d(0.17, 0.195), new Translation2d(0.17,-0.195), new Translation2d(-0.115, 0.195), new Translation2d(-0.115, -0.195)};
@@ -62,9 +60,9 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
         mecanum = new MecanumDrive(true, fL, fR, bL, bR);
 
-        leftY = () -> 0;
-        leftX = () -> 0;
-        rightX = () -> 0;
+        forwardSpeed = () -> 0;
+        strafeSpeed = () -> 0;
+        turnSpeed = () -> 0;
 
         kinematics =
                 new MecanumDriveKinematics(
@@ -99,7 +97,8 @@ public class DrivebaseSubsystem extends SubsystemBase {
     }
 
     public Rotation2d getConsistentGyroAngle() {
-        return Rotation2d.fromDegrees(Util.normalizeDegrees(-gyro.getAngles()[0] + 180)); //FIXME make sure this is correct angle b/c engie flipped hub
+        return Rotation2d.fromDegrees(Util.normalizeDegrees(gyro.getAngles()[0] - 180)); //FIXME make sure this is correct angle b/c engie flipped hub
+
     }
 
     public void zeroGyroscope() {
@@ -107,9 +106,9 @@ public class DrivebaseSubsystem extends SubsystemBase {
     }
 
     public void driveRawJoystick(DoubleSupplier leftY, DoubleSupplier leftX, DoubleSupplier rightX) {
-        this.leftY = leftY;
-        this.leftX = leftX;
-        this.rightX = rightX;
+        this.forwardSpeed = leftY;
+        this.strafeSpeed = leftX;
+        this.turnSpeed = rightX;
     }
 
     public void drive(ChassisSpeeds chassisSpeeds) {
@@ -120,14 +119,19 @@ public class DrivebaseSubsystem extends SubsystemBase {
         this.robotPose = odometry.updateWithTime(Robot.currentTimestamp(), getConsistentGyroAngle(), calculateWheelSpeeds());
     }
 
-    private void drivePeriodic() {
-        MecanumDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
+    public void driveFieldCentricJoystick(DoubleSupplier forwardSpeed, DoubleSupplier strafeSpeed, DoubleSupplier turnSpeed) {
+        this.forwardSpeed = forwardSpeed;
+        this.strafeSpeed = strafeSpeed;
+        this.turnSpeed = turnSpeed;
+    }
 
-        mecanum.driveWithMotorPowers(
-                wheelSpeeds.frontLeftMetersPerSecond,
-                wheelSpeeds.frontRightMetersPerSecond,
-                wheelSpeeds.rearLeftMetersPerSecond,
-                wheelSpeeds.rearRightMetersPerSecond);
+    private void drivePeriodic() {
+        mecanum.driveFieldCentric(
+                strafeSpeed.getAsDouble(),
+                forwardSpeed.getAsDouble(),
+                turnSpeed.getAsDouble(),
+                getConsistentGyroAngle().getDegrees());
+//        mecanum.driveRobotCentric(strafeSpeed.getAsDouble(), forwardSpeed.getAsDouble(), turnSpeed.getAsDouble());
     }
 
     @Override
@@ -137,6 +141,9 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
         if(SHOW_DEBUG_DATA) {
             packet.put("gyro angle", getConsistentGyroAngle());
+            packet.put("leftY", forwardSpeed.getAsDouble());
+            packet.put("leftX", strafeSpeed.getAsDouble());
+            packet.put("rightX", turnSpeed.getAsDouble());
 
             dashboard.sendTelemetryPacket(packet);
         }

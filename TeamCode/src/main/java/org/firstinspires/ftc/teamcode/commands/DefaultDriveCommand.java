@@ -25,12 +25,13 @@ public class DefaultDriveCommand extends CommandBase {
 
     @Override
     public void execute() {
-        drivebaseSubsystem.drive(
-                ChassisSpeeds.fromFieldRelativeSpeeds(
-                        translationXSupplier.getAsDouble(),
-                        translationYSupplier.getAsDouble(),
-                        rightX.getAsDouble(),
-                        drivebaseSubsystem.getConsistentGyroAngle()));
+//        drivebaseSubsystem.drive(
+//                ChassisSpeeds.fromFieldRelativeSpeeds(
+//                        translationXSupplier.getAsDouble(),
+//                        translationYSupplier.getAsDouble(),
+//                        rightX.getAsDouble(),
+//                        drivebaseSubsystem.getConsistentGyroAngle()));
+        drivebaseSubsystem.driveFieldCentricJoystick(translationXSupplier, translationYSupplier, rightX);
     }
 
     @Override
@@ -40,6 +41,9 @@ public class DefaultDriveCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        drivebaseSubsystem.drive(new ChassisSpeeds());
+        drivebaseSubsystem.driveFieldCentricJoystick(
+                () -> 0,
+                () -> 0,
+                () -> 0);
     }
 }

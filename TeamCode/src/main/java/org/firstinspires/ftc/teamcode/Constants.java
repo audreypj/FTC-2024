@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
-
 public final class Constants {
 
     public static final class Config {
@@ -44,7 +43,6 @@ public final class Constants {
             //FIXME placeholder values
             public static final double OFF = 0;
             public static final double INTAKE = 0.5;
-
             public static final double OUTTAKE = -0.5;
         }
     }
