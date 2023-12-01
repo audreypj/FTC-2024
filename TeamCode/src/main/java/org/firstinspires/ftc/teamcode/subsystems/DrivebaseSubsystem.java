@@ -119,7 +119,11 @@ public class DrivebaseSubsystem extends SubsystemBase {
     }
 
     private void drivePeriodic() {
-        mecanum.driveFieldCentric(strafeSpeed, forwardSpeed, turnSpeed);
+        mecanum.driveFieldCentric(
+                strafeSpeed.getAsDouble(),
+                forwardSpeed.getAsDouble(),
+                turnSpeed.getAsDouble(),
+                getConsistentGyroAngle().getDegrees());
     }
 
     @Override
