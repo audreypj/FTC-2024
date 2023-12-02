@@ -37,10 +37,10 @@ public class IntakeSubsystem extends SubsystemBase {
         //FIXME placeholder values
         switch(currentMode) {
             case INTAKE:
-                intakeServo.set(0);
+                intakeServo.set(-1);
                 break;
             case OUTTAKE:
-                intakeServo.set(0);
+                intakeServo.set(1);
                 break;
             case OFF:
             default:
